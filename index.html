@@ -1,1 +1,655 @@
-sdfsd
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>혈압관리 매니저</title>
+  <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+  <style>
+    :root{
+      --bg:#f4f7fb;
+      --card:#ffffff;
+      --line:#d9e2ec;
+      --text:#16324f;
+      --sub:#5b728a;
+      --accent:#1f7aec;
+      --accent2:#e94f37;
+      --accent3:#18a999;
+      --danger:#d64545;
+      --shadow:0 10px 30px rgba(22,50,79,.08);
+      --radius:18px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family:"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
+      background:linear-gradient(180deg,#f7fbff 0%,#eef4fa 100%);
+      color:var(--text);
+    }
+    .wrap{max-width:1280px;margin:0 auto;padding:20px;}
+    .hero{margin-bottom:18px;}
+    .hero h1{margin:0 0 8px;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.02em;}
+    .hero p{margin:0;color:var(--sub);font-size:15px;}
+    .grid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start;}
+    .left-col,.right-col{display:grid;gap:18px;}
+    .card{background:var(--card);border:1px solid rgba(217,226,236,.9);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .card-header{padding:18px 18px 8px;}
+    .card-header h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;}
+    .card-header p{margin:6px 0 0;font-size:13px;color:var(--sub);}
+    .card-body{padding:18px;}
+    .form-grid{display:grid;gap:14px;}
+    .field{display:grid;gap:7px;}
+    label{font-size:14px;font-weight:700;}
+    input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:#fff;color:var(--text);transition:border-color .2s,box-shadow .2s;}
+    input:focus{border-color:rgba(31,122,236,.75);box-shadow:0 0 0 4px rgba(31,122,236,.12);}
+    .unit{position:relative;}
+    .unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:13px;pointer-events:none;background:#fff;padding-left:6px;}
+    .unit input{padding-right:80px;}
+    .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
+    button{border:none;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .05s ease,box-shadow .2s ease;}
+    button:active{transform:translateY(1px);}
+    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(31,122,236,.22);}
+    .btn-secondary{background:#eef4fb;color:var(--text);}
+    .status{margin-top:12px;min-height:22px;font-size:14px;font-weight:700;}
+    .status.ok{color:var(--accent3);}
+    .status.error{color:var(--danger);}
+
+    /* 혈압 단계 배지 */
+    .grade-box{
+      padding:16px;
+      border-radius:16px;
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:10px 14px;
+      align-items:center;
+      border:2px solid;
+      margin-bottom:4px;
+    }
+    .grade-box.hidden{display:none;}
+    .grade-icon{font-size:28px;line-height:1;}
+    .grade-name{font-size:17px;font-weight:900;letter-spacing:-0.02em;}
+    .grade-desc{font-size:13px;grid-column:2;margin-top:-4px;opacity:.85;line-height:1.5;}
+    .grade-normal{background:#ecfbf8;border-color:#18a999;color:#0e7166;}
+    .grade-elevated{background:#fffbeb;border-color:#f59e0b;color:#92530a;}
+    .grade-stage1{background:#fff7ed;border-color:#f97316;color:#9a3412;}
+    .grade-stage2{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
+    .grade-crisis{background:#fdf2f8;border-color:#a21caf;color:#6b21a8;}
+
+    /* 범례 */
+    .grade-legend{
+      display:grid;
+      gap:7px;
+    }
+    .legend-item{
+      display:grid;
+      grid-template-columns:12px 1fr auto auto;
+      gap:0 10px;
+      align-items:center;
+      font-size:13px;
+    }
+    .legend-dot{width:12px;height:12px;border-radius:50%;}
+    .legend-label{font-weight:700;}
+    .legend-range{color:var(--sub);font-size:12px;}
+
+    .chart-box{min-height:400px;}
+    #trendChart{width:100%;height:420px;}
+
+    .board-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
+    .rank-list{display:grid;gap:10px;}
+    .rank-item{
+      display:grid;
+      grid-template-columns:44px 1fr auto;
+      gap:10px;
+      align-items:center;
+      padding:12px 14px;
+      border:1px solid var(--line);
+      border-radius:14px;
+      background:#fbfdff;
+    }
+    .rank-no{
+      width:36px;height:36px;border-radius:50%;
+      display:grid;place-items:center;
+      font-weight:900;color:#fff;font-size:15px;
+    }
+    .rank-no.r1{background:linear-gradient(135deg,#f59e0b,#fcd34d);}
+    .rank-no.r2{background:linear-gradient(135deg,#9ca3af,#d1d5db);}
+    .rank-no.r3{background:linear-gradient(135deg,#cd7c47,#e4a97a);}
+    .rank-main{min-width:0;}
+    .rank-date{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rank-sub{margin-top:2px;font-size:12px;color:var(--sub);}
+    .rank-value{font-size:18px;font-weight:900;letter-spacing:-0.02em;text-align:right;}
+    .rank-grade{font-size:11px;font-weight:700;text-align:right;margin-top:2px;}
+    .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:14px;color:var(--sub);text-align:center;background:#fbfdff;}
+
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;}
+    table{width:100%;border-collapse:collapse;min-width:820px;background:#fff;}
+    thead th{position:sticky;top:0;background:#f7fbff;color:var(--text);font-size:13px;text-align:left;padding:14px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+    tbody td{padding:14px 12px;border-bottom:1px solid #eef3f8;font-size:14px;vertical-align:middle;}
+    tbody tr:hover{background:#fbfdff;}
+    .pill{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
+    .pill-sys{background:#edf4ff;color:var(--accent);}
+    .pill-dia{background:#fff0ee;color:var(--accent2);}
+    .pill-bpm{background:#ecfbf8;color:var(--accent3);}
+    .pill-grade{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
+    .btn-edit{padding:9px 12px;border-radius:12px;background:#edf4ff;color:var(--accent);font-size:13px;font-weight:800;}
+    .empty{padding:28px;text-align:center;color:var(--sub);}
+
+    @media(max-width:980px){
+      .grid{grid-template-columns:1fr;}
+      .board-grid{grid-template-columns:1fr;}
+      #trendChart{height:360px;}
+    }
+    @media(max-width:640px){
+      .wrap{padding:14px;}
+      .card-header,.card-body{padding:14px;}
+      .btn-row{grid-template-columns:1fr;}
+    }
+  </style>
+</head>
+<body>
+<div class="wrap">
+  <section class="hero">
+    <h1>🩺 혈압관리 매니저</h1>
+    <p>최고혈압, 최저혈압, 맥박수를 기록하고 추세 그래프와 순위 보드로 한눈에 확인합니다.</p>
+  </section>
+
+  <section class="grid">
+    <div class="left-col">
+      <!-- 입력 폼 -->
+      <div class="card">
+        <div class="card-header">
+          <h2>기록 입력</h2>
+          <p>날짜/시간은 자동 입력되며 직접 수정도 가능합니다.</p>
+        </div>
+        <div class="card-body">
+          <form id="bpForm" class="form-grid">
+            <div class="field">
+              <label for="recordedAt">기록 날짜/시간</label>
+              <input type="datetime-local" id="recordedAt" required />
+            </div>
+            <div class="field">
+              <label for="systolic">최고혈압</label>
+              <div class="unit">
+                <input type="number" id="systolic" min="40" max="300" step="1" placeholder="예: 128" required />
+                <span>mmHg</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="diastolic">최저혈압</label>
+              <div class="unit">
+                <input type="number" id="diastolic" min="20" max="200" step="1" placeholder="예: 82" required />
+                <span>mmHg</span>
+              </div>
+            </div>
+            <div class="field">
+              <label for="pulse">맥박수</label>
+              <div class="unit">
+                <input type="number" id="pulse" min="20" max="250" step="1" placeholder="예: 72" required />
+                <span>bpm</span>
+              </div>
+            </div>
+            <!-- 실시간 단계 표시 -->
+            <div id="gradeBox" class="grade-box hidden">
+              <div class="grade-icon" id="gradeIcon"></div>
+              <div class="grade-name" id="gradeName"></div>
+              <div class="grade-desc" id="gradeDesc"></div>
+            </div>
+
+            <div class="btn-row">
+              <button type="submit" class="btn-primary" id="submitBtn">기록 추가</button>
+              <button type="button" class="btn-secondary" id="resetBtn">새 입력</button>
+            </div>
+            <div id="status" class="status"></div>
+          </form>
+        </div>
+      </div>
+
+      <!-- 혈압 단계 범례 -->
+      <div class="card">
+        <div class="card-header">
+          <h2>혈압 단계 기준</h2>
+          <p>대한고혈압학회 · AHA/ACC 2025 기준</p>
+        </div>
+        <div class="card-body">
+          <div class="grade-legend">
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#18a999"></div>
+              <span class="legend-label" style="color:#0e7166">정상</span>
+              <span class="legend-range">수축기 &lt;120</span>
+              <span class="legend-range">이완기 &lt;80</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#f59e0b"></div>
+              <span class="legend-label" style="color:#92530a">주의</span>
+              <span class="legend-range">수축기 120–129</span>
+              <span class="legend-range">이완기 &lt;80</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#f97316"></div>
+              <span class="legend-label" style="color:#9a3412">고혈압 전단계</span>
+              <span class="legend-range">수축기 130–139</span>
+              <span class="legend-range">이완기 80–89</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#ef4444"></div>
+              <span class="legend-label" style="color:#991b1b">고혈압 1단계</span>
+              <span class="legend-range">수축기 140–179</span>
+              <span class="legend-range">이완기 90–119</span>
+            </div>
+            <div class="legend-item">
+              <div class="legend-dot" style="background:#a21caf"></div>
+              <span class="legend-label" style="color:#6b21a8">고혈압 위기</span>
+              <span class="legend-range">수축기 ≥180</span>
+              <span class="legend-range">이완기 ≥120</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="right-col">
+      <!-- 트렌드 차트 -->
+      <div class="card">
+        <div class="card-header">
+          <h2>Trend 그래프</h2>
+          <p>시간순으로 최고혈압, 최저혈압, 맥박수 추이를 함께 표시합니다.</p>
+        </div>
+        <div class="card-body chart-box">
+          <div id="trendChart"></div>
+        </div>
+      </div>
+
+      <!-- 순위 보드 -->
+      <div class="board-grid">
+        <div class="card">
+          <div class="card-header">
+            <h2>🔴 최고혈압 순위</h2>
+            <p>수축기 혈압 기준 상위 3위까지 표시합니다.</p>
+          </div>
+          <div class="card-body">
+            <div id="topSystolicBoard"></div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-header">
+            <h2>🔵 최저혈압 순위</h2>
+            <p>이완기 혈압 기준 상위 3위까지 표시합니다.</p>
+          </div>
+          <div class="card-body">
+            <div id="lowDiastolicBoard"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 기록 테이블 -->
+      <div class="card">
+        <div class="card-header">
+          <h2>누적 기록</h2>
+          <p>기록 목록에서 수정할 항목을 선택할 수 있습니다.</p>
+        </div>
+        <div class="card-body">
+          <div class="table-wrap">
+            <table>
+              <thead>
+                <tr>
+                  <th>기록 날짜/시간</th>
+                  <th>최고혈압</th>
+                  <th>최저혈압</th>
+                  <th>맥박수</th>
+                  <th>혈압 단계</th>
+                  <th>관리</th>
+                </tr>
+              </thead>
+              <tbody id="recordTableBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+</div>
+
+<script>
+  const STORAGE_KEY = "bpManagerRecords_v2";
+
+  // ─── 혈압 단계 판정 ────────────────────────────────────────────────────
+  const GRADES = [
+    {
+      key:"crisis",
+      name:"고혈압 위기",
+      icon:"🚨",
+      cls:"grade-crisis",
+      pillBg:"#fdf2f8",pillColor:"#a21caf",
+      dotColor:"#a21caf",
+      desc:"즉시 응급처치 또는 119 연락이 필요합니다.",
+      test:(s,d)=> s>=180 || d>=120
+    },
+    {
+      key:"stage2",
+      name:"고혈압 1단계",
+      icon:"⚠️",
+      cls:"grade-stage2",
+      pillBg:"#fef2f2",pillColor:"#991b1b",
+      dotColor:"#ef4444",
+      desc:"약물치료 포함 적극적인 관리가 필요합니다.",
+      test:(s,d)=> s>=140 || d>=90
+    },
+    {
+      key:"stage1",
+      name:"고혈압 전단계",
+      icon:"🟠",
+      cls:"grade-stage1",
+      pillBg:"#fff7ed",pillColor:"#9a3412",
+      dotColor:"#f97316",
+      desc:"생활습관 개선과 정기적인 진료가 권장됩니다.",
+      test:(s,d)=> s>=130 || d>=80
+    },
+    {
+      key:"elevated",
+      name:"주의혈압",
+      icon:"🟡",
+      cls:"grade-elevated",
+      pillBg:"#fffbeb",pillColor:"#92530a",
+      dotColor:"#f59e0b",
+      desc:"생활습관 개선이 필요한 단계입니다.",
+      test:(s,d)=> s>=120 && d<80
+    },
+    {
+      key:"normal",
+      name:"정상",
+      icon:"✅",
+      cls:"grade-normal",
+      pillBg:"#ecfbf8",pillColor:"#0e7166",
+      dotColor:"#18a999",
+      desc:"이상적인 혈압입니다. 현재 상태를 유지하세요.",
+      test:()=> true
+    }
+  ];
+
+  function getGrade(s,d){
+    return GRADES.find(g => g.test(s,d)) || GRADES[GRADES.length-1];
+  }
+
+  // ─── 상태 ──────────────────────────────────────────────────────────────
+  let records = loadRecords();
+  let editingId = null;
+
+  const form          = document.getElementById("bpForm");
+  const recordedAtEl  = document.getElementById("recordedAt");
+  const systolicEl    = document.getElementById("systolic");
+  const diastolicEl   = document.getElementById("diastolic");
+  const pulseEl       = document.getElementById("pulse");
+  const submitBtn     = document.getElementById("submitBtn");
+  const resetBtn      = document.getElementById("resetBtn");
+  const statusEl      = document.getElementById("status");
+  const gradeBox      = document.getElementById("gradeBox");
+  const gradeIcon     = document.getElementById("gradeIcon");
+  const gradeName     = document.getElementById("gradeName");
+  const gradeDesc     = document.getElementById("gradeDesc");
+
+  // ─── 초기화 ────────────────────────────────────────────────────────────
+  function nowLocalDateTime(){
+    const now = new Date();
+    const local = new Date(now.getTime() - now.getTimezoneOffset()*60000);
+    return local.toISOString().slice(0,16);
+  }
+
+  function loadRecords(){
+    try{
+      const raw = localStorage.getItem(STORAGE_KEY);
+      const p = raw ? JSON.parse(raw) : [];
+      return Array.isArray(p) ? p : [];
+    }catch{return [];}
+  }
+
+  function saveRecords(){
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  }
+
+  function formatDT(value){
+    const d = new Date(value);
+    if(isNaN(d)) return value;
+    return new Intl.DateTimeFormat("ko-KR",{
+      year:"numeric",month:"2-digit",day:"2-digit",
+      hour:"2-digit",minute:"2-digit"
+    }).format(d);
+  }
+
+  function showStatus(msg, type="ok"){
+    statusEl.textContent = msg;
+    statusEl.className = "status "+type;
+  }
+  function clearStatus(){statusEl.textContent="";statusEl.className="status";}
+
+  function resetForm(clearMsg=true){
+    form.reset();
+    recordedAtEl.value = nowLocalDateTime();
+    editingId = null;
+    submitBtn.textContent = "기록 추가";
+    gradeBox.className = "grade-box hidden";
+    if(clearMsg) clearStatus();
+  }
+
+  // ─── 실시간 단계 미리보기 ────────────────────────────────────────────
+  function updateGradePreview(){
+    const s = Number(systolicEl.value);
+    const d = Number(diastolicEl.value);
+    if(!systolicEl.value || !diastolicEl.value || isNaN(s) || isNaN(d)){
+      gradeBox.className = "grade-box hidden";
+      return;
+    }
+    if(s <= d){
+      gradeBox.className = "grade-box hidden";
+      return;
+    }
+    const g = getGrade(s,d);
+    gradeBox.className = "grade-box " + g.cls;
+    gradeIcon.textContent = g.icon;
+    gradeName.textContent = g.name;
+    gradeDesc.textContent = g.desc;
+  }
+
+  systolicEl.addEventListener("input", updateGradePreview);
+  diastolicEl.addEventListener("input", updateGradePreview);
+
+  // ─── 폼 제출 ──────────────────────────────────────────────────────────
+  form.addEventListener("submit", e=>{
+    e.preventDefault();
+    const recordedAt = recordedAtEl.value;
+    const systolic   = Number(systolicEl.value);
+    const diastolic  = Number(diastolicEl.value);
+    const pulse      = Number(pulseEl.value);
+
+    if(!recordedAt)                                        return showStatus("기록 날짜/시간을 입력해주세요.", "error");
+    if(!isFinite(systolic)||!isFinite(diastolic)||!isFinite(pulse)) return showStatus("모든 수치를 숫자로 입력해주세요.", "error");
+    if(systolic <= diastolic)                              return showStatus("최고혈압은 최저혈압보다 크게 입력해주세요.", "error");
+
+    if(editingId){
+      records = records.map(r => r.id===editingId ? {...r,recordedAt,systolic,diastolic,pulse} : r);
+      showStatus("기록이 수정되었습니다.", "ok");
+    } else {
+      records.push({id:crypto.randomUUID(), recordedAt, systolic, diastolic, pulse});
+      showStatus("기록이 추가되었습니다.", "ok");
+    }
+    saveRecords();
+    renderAll();
+    resetForm(false);
+  });
+
+  resetBtn.addEventListener("click",()=>{
+    resetForm();
+    showStatus("새 입력 상태로 초기화되었습니다.", "ok");
+  });
+
+  // ─── 차트 ─────────────────────────────────────────────────────────────
+  function renderChart(){
+    const sorted = [...records].sort((a,b)=>new Date(a.recordedAt)-new Date(b.recordedAt));
+    const el = document.getElementById("trendChart");
+
+    if(!sorted.length){
+      el.innerHTML='<div class="empty">아직 기록이 없습니다. 왼쪽에서 혈압 기록을 추가해 주세요.</div>';
+      return;
+    }
+    el.innerHTML="";
+
+    const x = sorted.map(r=>new Date(r.recordedAt));
+
+    const traces = [
+      {
+        x, y:sorted.map(r=>r.systolic),
+        type:"scatter", mode:"lines+markers", name:"최고혈압",
+        line:{width:3,color:"#1f7aec"}, marker:{size:8,color:"#1f7aec"},
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최고혈압: %{y} mmHg<extra></extra>"
+      },
+      {
+        x, y:sorted.map(r=>r.diastolic),
+        type:"scatter", mode:"lines+markers", name:"최저혈압",
+        line:{width:3,color:"#e94f37"}, marker:{size:8,color:"#e94f37"},
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최저혈압: %{y} mmHg<extra></extra>"
+      },
+      {
+        x, y:sorted.map(r=>r.pulse),
+        type:"scatter", mode:"lines+markers", name:"맥박수",
+        line:{width:3,color:"#18a999",dash:"dot"}, marker:{size:8,color:"#18a999"},
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>맥박수: %{y} bpm<extra></extra>"
+      }
+    ];
+
+    // 정상/주의/고혈압 기준선
+    const refLines = [
+      {y:120, color:"#f59e0b", dash:"dot",  label:"주의혈압 기준(120)"},
+      {y:140, color:"#ef4444", dash:"dash", label:"고혈압 기준(140)"},
+      {y:180, color:"#a21caf", dash:"dash", label:"위기 기준(180)"}
+    ];
+    const shapes = refLines.map(r=>({
+      type:"line", x0:0, x1:1, xref:"paper",
+      y0:r.y, y1:r.y, yref:"y",
+      line:{color:r.color, width:1.5, dash:r.dash}
+    }));
+
+    const layout = {
+      margin:{l:52,r:16,t:20,b:52},
+      paper_bgcolor:"white", plot_bgcolor:"white",
+      hovermode:"x unified",
+      legend:{orientation:"h",x:0,y:1.15},
+      xaxis:{title:"기록 시각",gridcolor:"#eef3f8",tickformat:"%m/%d\n%H:%M"},
+      yaxis:{title:"수치",gridcolor:"#eef3f8",zeroline:false},
+      shapes
+    };
+
+    Plotly.newPlot(el, traces, layout, {responsive:true, displayModeBar:false});
+  }
+
+  // ─── 순위 보드 ────────────────────────────────────────────────────────
+  function renderBoards(){
+    const topSysEl  = document.getElementById("topSystolicBoard");
+    const lowDiaEl  = document.getElementById("lowDiastolicBoard");
+    topSysEl.innerHTML = "";
+    lowDiaEl.innerHTML = "";
+
+    if(!records.length){
+      topSysEl.innerHTML='<div class="rank-empty">표시할 기록이 없습니다.</div>';
+      lowDiaEl.innerHTML='<div class="rank-empty">표시할 기록이 없습니다.</div>';
+      return;
+    }
+
+    const TOP3_SYS = [...records]
+      .sort((a,b)=>b.systolic-a.systolic||new Date(a.recordedAt)-new Date(b.recordedAt))
+      .slice(0,3);
+    const TOP3_DIA = [...records]
+      .sort((a,b)=>b.diastolic-a.diastolic||new Date(a.recordedAt)-new Date(b.recordedAt))
+      .slice(0,3);
+
+    function buildBoard(container, items, valueKey){
+      const wrap = document.createElement("div");
+      wrap.className = "rank-list";
+      items.forEach((item,i)=>{
+        const g = getGrade(item.systolic, item.diastolic);
+        const noClass = ["r1","r2","r3"][i] || "r3";
+        const medalLabel = ["🥇 1위","🥈 2위","🥉 3위"][i];
+        const div = document.createElement("div");
+        div.className = "rank-item";
+        div.innerHTML = `
+          <div class="rank-no ${noClass}">${i+1}</div>
+          <div class="rank-main">
+            <div class="rank-date">${formatDT(item.recordedAt)}</div>
+            <div class="rank-sub">맥박 ${item.pulse} bpm · ${medalLabel}</div>
+          </div>
+          <div>
+            <div class="rank-value">${item[valueKey]} <span style="font-size:13px;font-weight:600">mmHg</span></div>
+            <div class="rank-grade">
+              <span class="pill-grade" style="background:${g.pillBg};color:${g.pillColor}">${g.name}</span>
+            </div>
+          </div>
+        `;
+        wrap.appendChild(div);
+      });
+      container.appendChild(wrap);
+    }
+
+    buildBoard(topSysEl,  TOP3_SYS, "systolic");
+    buildBoard(lowDiaEl,  TOP3_DIA, "diastolic");
+  }
+
+  // ─── 테이블 ───────────────────────────────────────────────────────────
+  function renderTable(){
+    const tbody = document.getElementById("recordTableBody");
+    const sorted = [...records].sort((a,b)=>new Date(b.recordedAt)-new Date(a.recordedAt));
+    tbody.innerHTML = "";
+
+    if(!sorted.length){
+      tbody.innerHTML=`<tr><td colspan="6"><div class="empty">아직 저장된 기록이 없습니다.</div></td></tr>`;
+      return;
+    }
+
+    sorted.forEach(r=>{
+      const g = getGrade(r.systolic, r.diastolic);
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td>${formatDT(r.recordedAt)}</td>
+        <td><span class="pill pill-sys">${r.systolic} mmHg</span></td>
+        <td><span class="pill pill-dia">${r.diastolic} mmHg</span></td>
+        <td><span class="pill pill-bpm">${r.pulse} bpm</span></td>
+        <td>
+          <span class="pill-grade" style="background:${g.pillBg};color:${g.pillColor};padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;">
+            ${g.icon} ${g.name}
+          </span>
+        </td>
+        <td><button class="btn-edit" data-id="${r.id}">수정</button></td>
+      `;
+      tbody.appendChild(tr);
+    });
+
+    document.querySelectorAll(".btn-edit").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        const target = records.find(r=>r.id===btn.dataset.id);
+        if(!target) return;
+        editingId         = target.id;
+        recordedAtEl.value = target.recordedAt;
+        systolicEl.value  = target.systolic;
+        diastolicEl.value = target.diastolic;
+        pulseEl.value     = target.pulse;
+        submitBtn.textContent = "수정 저장";
+        updateGradePreview();
+        showStatus("수정 모드입니다. 값을 바꾼 뒤 '수정 저장'을 눌러주세요.", "ok");
+        window.scrollTo({top:0,behavior:"smooth"});
+      });
+    });
+  }
+
+  function renderAll(){
+    renderChart();
+    renderBoards();
+    renderTable();
+  }
+
+  window.addEventListener("resize",()=>{
+    const el=document.getElementById("trendChart");
+    if(records.length && el) Plotly.Plots.resize(el);
+  });
+
+  recordedAtEl.value = nowLocalDateTime();
+  renderAll();
+</script>
+</body>
+</html>
