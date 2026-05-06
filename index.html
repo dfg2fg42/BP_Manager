@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="ko">
+<html lang="ko" data-theme="light">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -18,21 +18,63 @@
       --danger:#d64545;
       --shadow:0 10px 30px rgba(22,50,79,.08);
       --radius:18px;
+      --hero-bg:linear-gradient(180deg,#f7fbff 0%,#eef4fa 100%);
+      --input-bg:#fff;
+      --table-head:#f7fbff;
+      --rank-bg:#fbfdff;
+      --empty-bg:#fbfdff;
+      --chart-bg:#ffffff;
+      --btn-sec-bg:#eef4fb;
+      --btn-sec-color:var(--text);
+    }
+    [data-theme="dark"]{
+      --bg:#0f1923;
+      --card:#18252f;
+      --line:#263545;
+      --text:#d6e8f5;
+      --sub:#7a9ab5;
+      --accent:#4d9eff;
+      --accent2:#ff6b57;
+      --accent3:#1fcabb;
+      --danger:#ff6b6b;
+      --shadow:0 10px 30px rgba(0,0,0,.35);
+      --hero-bg:linear-gradient(180deg,#101c27 0%,#0d1820 100%);
+      --input-bg:#1e2f3e;
+      --table-head:#1a2b38;
+      --rank-bg:#1a2b38;
+      --empty-bg:#1a2b38;
+      --chart-bg:#18252f;
+      --btn-sec-bg:#1e3044;
+      --btn-sec-color:#d6e8f5;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
       font-family:"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-      background:linear-gradient(180deg,#f7fbff 0%,#eef4fa 100%);
+      background:var(--hero-bg);
       color:var(--text);
+      transition:background .25s,color .25s;
     }
     .wrap{max-width:1280px;margin:0 auto;padding:20px;}
-    .hero{margin-bottom:18px;}
-    .hero h1{margin:0 0 8px;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.02em;}
-    .hero p{margin:0;color:var(--sub);font-size:15px;}
+    .hero{margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
+    .hero-text h1{margin:0 0 8px;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.02em;}
+    .hero-text p{margin:0;color:var(--sub);font-size:15px;}
+    .hero-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:4px;}
+    .icon-btn{
+      display:flex;align-items:center;gap:7px;
+      padding:10px 16px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;border:none;
+      transition:background .2s,transform .05s;
+    }
+    .icon-btn:active{transform:translateY(1px);}
+    .btn-theme{background:var(--btn-sec-bg);color:var(--btn-sec-color);}
+    .btn-backup{background:#ecfbf8;color:#0e7166;}
+    .btn-restore{background:#edf4ff;color:#1a56a8;}
+    [data-theme="dark"] .btn-backup{background:#193a30;color:#1fcabb;}
+    [data-theme="dark"] .btn-restore{background:#1a2f48;color:#4d9eff;}
+    .icon-btn svg{width:17px;height:17px;flex-shrink:0;}
     .grid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start;}
     .left-col,.right-col{display:grid;gap:18px;}
-    .card{background:var(--card);border:1px solid rgba(217,226,236,.9);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;}
+    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .25s,border-color .25s;}
     .card-header{padding:18px 18px 8px;}
     .card-header h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;}
     .card-header p{margin:6px 0 0;font-size:13px;color:var(--sub);}
@@ -40,30 +82,23 @@
     .form-grid{display:grid;gap:14px;}
     .field{display:grid;gap:7px;}
     label{font-size:14px;font-weight:700;}
-    input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:#fff;color:var(--text);transition:border-color .2s,box-shadow .2s;}
+    input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:var(--input-bg);color:var(--text);transition:border-color .2s,box-shadow .2s;}
     input:focus{border-color:rgba(31,122,236,.75);box-shadow:0 0 0 4px rgba(31,122,236,.12);}
     .unit{position:relative;}
-    .unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:13px;pointer-events:none;background:#fff;padding-left:6px;}
+    .unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:13px;pointer-events:none;background:var(--input-bg);padding-left:6px;}
     .unit input{padding-right:80px;}
     .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
     button{border:none;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .05s ease,box-shadow .2s ease;}
     button:active{transform:translateY(1px);}
     .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(31,122,236,.22);}
-    .btn-secondary{background:#eef4fb;color:var(--text);}
+    .btn-secondary{background:var(--btn-sec-bg);color:var(--btn-sec-color);}
     .status{margin-top:12px;min-height:22px;font-size:14px;font-weight:700;}
     .status.ok{color:var(--accent3);}
     .status.error{color:var(--danger);}
-
-    /* 혈압 단계 배지 */
     .grade-box{
-      padding:16px;
-      border-radius:16px;
-      display:grid;
-      grid-template-columns:auto 1fr;
-      gap:10px 14px;
-      align-items:center;
-      border:2px solid;
-      margin-bottom:4px;
+      padding:16px;border-radius:16px;
+      display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;
+      border:2px solid;margin-bottom:4px;
     }
     .grade-box.hidden{display:none;}
     .grade-icon{font-size:28px;line-height:1;}
@@ -74,43 +109,25 @@
     .grade-stage1{background:#fff7ed;border-color:#f97316;color:#9a3412;}
     .grade-stage2{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
     .grade-crisis{background:#fdf2f8;border-color:#a21caf;color:#6b21a8;}
-
-    /* 범례 */
-    .grade-legend{
-      display:grid;
-      gap:7px;
-    }
-    .legend-item{
-      display:grid;
-      grid-template-columns:12px 1fr auto auto;
-      gap:0 10px;
-      align-items:center;
-      font-size:13px;
-    }
+    [data-theme="dark"] .grade-normal{background:#0e2e28;border-color:#18a999;color:#1fcabb;}
+    [data-theme="dark"] .grade-elevated{background:#2b2200;border-color:#f59e0b;color:#f5c030;}
+    [data-theme="dark"] .grade-stage1{background:#2b1800;border-color:#f97316;color:#fb923c;}
+    [data-theme="dark"] .grade-stage2{background:#2d0a0a;border-color:#ef4444;color:#f87171;}
+    [data-theme="dark"] .grade-crisis{background:#250929;border-color:#a21caf;color:#d946ef;}
+    .grade-legend{display:grid;gap:7px;}
+    .legend-item{display:grid;grid-template-columns:12px 1fr auto auto;gap:0 10px;align-items:center;font-size:13px;}
     .legend-dot{width:12px;height:12px;border-radius:50%;}
     .legend-label{font-weight:700;}
     .legend-range{color:var(--sub);font-size:12px;}
-
     .chart-box{min-height:400px;}
     #trendChart{width:100%;height:420px;}
-
     .board-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
     .rank-list{display:grid;gap:10px;}
     .rank-item{
-      display:grid;
-      grid-template-columns:44px 1fr auto;
-      gap:10px;
-      align-items:center;
-      padding:12px 14px;
-      border:1px solid var(--line);
-      border-radius:14px;
-      background:#fbfdff;
+      display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;
+      padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--rank-bg);
     }
-    .rank-no{
-      width:36px;height:36px;border-radius:50%;
-      display:grid;place-items:center;
-      font-weight:900;color:#fff;font-size:15px;
-    }
+    .rank-no{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#fff;font-size:15px;}
     .rank-no.r1{background:linear-gradient(135deg,#f59e0b,#fcd34d);}
     .rank-no.r2{background:linear-gradient(135deg,#9ca3af,#d1d5db);}
     .rank-no.r3{background:linear-gradient(135deg,#cd7c47,#e4a97a);}
@@ -119,21 +136,32 @@
     .rank-sub{margin-top:2px;font-size:12px;color:var(--sub);}
     .rank-value{font-size:18px;font-weight:900;letter-spacing:-0.02em;text-align:right;}
     .rank-grade{font-size:11px;font-weight:700;text-align:right;margin-top:2px;}
-    .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:14px;color:var(--sub);text-align:center;background:#fbfdff;}
-
+    .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:14px;color:var(--sub);text-align:center;background:var(--empty-bg);}
     .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;}
-    table{width:100%;border-collapse:collapse;min-width:820px;background:#fff;}
-    thead th{position:sticky;top:0;background:#f7fbff;color:var(--text);font-size:13px;text-align:left;padding:14px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
-    tbody td{padding:14px 12px;border-bottom:1px solid #eef3f8;font-size:14px;vertical-align:middle;}
-    tbody tr:hover{background:#fbfdff;}
+    table{width:100%;border-collapse:collapse;min-width:820px;background:var(--card);}
+    thead th{position:sticky;top:0;background:var(--table-head);color:var(--text);font-size:13px;text-align:left;padding:14px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+    tbody td{padding:14px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+    tbody tr:hover{background:var(--rank-bg);}
     .pill{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
-    .pill-sys{background:#edf4ff;color:var(--accent);}
-    .pill-dia{background:#fff0ee;color:var(--accent2);}
-    .pill-bpm{background:#ecfbf8;color:var(--accent3);}
+    .pill-sys{background:#edf4ff;color:#1a56a8;}
+    .pill-dia{background:#fff0ee;color:#c0392b;}
+    .pill-bpm{background:#ecfbf8;color:#0e7166;}
+    [data-theme="dark"] .pill-sys{background:#1a2f48;color:#4d9eff;}
+    [data-theme="dark"] .pill-dia{background:#2d1818;color:#ff6b57;}
+    [data-theme="dark"] .pill-bpm{background:#0e2e28;color:#1fcabb;}
     .pill-grade{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
-    .btn-edit{padding:9px 12px;border-radius:12px;background:#edf4ff;color:var(--accent);font-size:13px;font-weight:800;}
+    .btn-edit{padding:9px 12px;border-radius:12px;background:#edf4ff;color:#1a56a8;font-size:13px;font-weight:800;border:none;cursor:pointer;}
+    [data-theme="dark"] .btn-edit{background:#1a2f48;color:#4d9eff;}
+    .btn-delete{padding:9px 12px;border-radius:12px;background:#fef2f2;color:#991b1b;font-size:13px;font-weight:800;border:none;cursor:pointer;margin-left:6px;}
+    [data-theme="dark"] .btn-delete{background:#2d0a0a;color:#f87171;}
     .empty{padding:28px;text-align:center;color:var(--sub);}
-
+    #toast{
+      position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
+      background:#16324f;color:#fff;padding:13px 22px;border-radius:14px;font-size:14px;font-weight:700;
+      opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:9999;white-space:nowrap;
+    }
+    #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
+    [data-theme="dark"] #toast{background:#4d9eff;color:#0f1923;}
     @media(max-width:980px){
       .grid{grid-template-columns:1fr;}
       .board-grid{grid-template-columns:1fr;}
@@ -143,19 +171,48 @@
       .wrap{padding:14px;}
       .card-header,.card-body{padding:14px;}
       .btn-row{grid-template-columns:1fr;}
+      .hero{flex-direction:column;}
     }
   </style>
 </head>
 <body>
 <div class="wrap">
   <section class="hero">
-    <h1>🩺 혈압관리 매니저</h1>
-    <p>최고혈압, 최저혈압, 맥박수를 기록하고 추세 그래프와 순위 보드로 한눈에 확인합니다.</p>
+    <div class="hero-text">
+      <h1>🩺 혈압관리 매니저</h1>
+      <p>최고혈압, 최저혈압, 맥박수를 기록하고 추세 그래프와 순위 보드로 한눈에 확인합니다.</p>
+    </div>
+    <div class="hero-actions">
+      <button class="icon-btn btn-theme" id="themeToggle" title="테마 전환">
+        <svg id="themeIcon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+          <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+          <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+          <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+          <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>
+        </svg>
+        <span id="themeLabel">라이트 모드</span>
+      </button>
+      <button class="icon-btn btn-backup" id="backupBtn" title="JSON으로 백업 저장">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/>
+        </svg>
+        백업 저장
+      </button>
+      <button class="icon-btn btn-restore" id="restoreBtn" title="JSON 백업 불러오기">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/>
+          <polyline points="17 8 12 3 7 8"/><line x1="12" y1="3" x2="12" y2="15"/>
+        </svg>
+        백업 불러오기
+      </button>
+      <input type="file" id="restoreFile" accept=".json" style="display:none" />
+    </div>
   </section>
 
   <section class="grid">
     <div class="left-col">
-      <!-- 입력 폼 -->
       <div class="card">
         <div class="card-header">
           <h2>기록 입력</h2>
@@ -188,13 +245,11 @@
                 <span>bpm</span>
               </div>
             </div>
-            <!-- 실시간 단계 표시 -->
             <div id="gradeBox" class="grade-box hidden">
               <div class="grade-icon" id="gradeIcon"></div>
               <div class="grade-name" id="gradeName"></div>
               <div class="grade-desc" id="gradeDesc"></div>
             </div>
-
             <div class="btn-row">
               <button type="submit" class="btn-primary" id="submitBtn">기록 추가</button>
               <button type="button" class="btn-secondary" id="resetBtn">새 입력</button>
@@ -204,7 +259,6 @@
         </div>
       </div>
 
-      <!-- 혈압 단계 범례 -->
       <div class="card">
         <div class="card-header">
           <h2>혈압 단계 기준</h2>
@@ -248,7 +302,6 @@
     </div>
 
     <div class="right-col">
-      <!-- 트렌드 차트 -->
       <div class="card">
         <div class="card-header">
           <h2>Trend 그래프</h2>
@@ -259,7 +312,6 @@
         </div>
       </div>
 
-      <!-- 순위 보드 -->
       <div class="board-grid">
         <div class="card">
           <div class="card-header">
@@ -281,11 +333,10 @@
         </div>
       </div>
 
-      <!-- 기록 테이블 -->
       <div class="card">
         <div class="card-header">
           <h2>누적 기록</h2>
-          <p>기록 목록에서 수정할 항목을 선택할 수 있습니다.</p>
+          <p>수정 또는 삭제할 항목을 선택할 수 있습니다.</p>
         </div>
         <div class="card-body">
           <div class="table-wrap">
@@ -309,347 +360,371 @@
   </section>
 </div>
 
+<div id="toast"></div>
+
 <script>
   const STORAGE_KEY = "bpManagerRecords_v2";
+  const THEME_KEY   = "bpManagerTheme";
 
-  // ─── 혈압 단계 판정 ────────────────────────────────────────────────────
   const GRADES = [
-    {
-      key:"crisis",
-      name:"고혈압 위기",
-      icon:"🚨",
-      cls:"grade-crisis",
-      pillBg:"#fdf2f8",pillColor:"#a21caf",
-      dotColor:"#a21caf",
+    { key:"crisis",  name:"고혈압 위기",   icon:"🚨", cls:"grade-crisis",
+      pillBg:"#fdf2f8", pillColor:"#a21caf",
+      pillBgDark:"#250929", pillColorDark:"#d946ef",
       desc:"즉시 응급처치 또는 119 연락이 필요합니다.",
-      test:(s,d)=> s>=180 || d>=120
-    },
-    {
-      key:"stage2",
-      name:"고혈압 1단계",
-      icon:"⚠️",
-      cls:"grade-stage2",
-      pillBg:"#fef2f2",pillColor:"#991b1b",
-      dotColor:"#ef4444",
+      test:(s,d)=> s>=180 || d>=120 },
+    { key:"stage2",  name:"고혈압 1단계",  icon:"⚠️", cls:"grade-stage2",
+      pillBg:"#fef2f2", pillColor:"#991b1b",
+      pillBgDark:"#2d0a0a", pillColorDark:"#f87171",
       desc:"약물치료 포함 적극적인 관리가 필요합니다.",
-      test:(s,d)=> s>=140 || d>=90
-    },
-    {
-      key:"stage1",
-      name:"고혈압 전단계",
-      icon:"🟠",
-      cls:"grade-stage1",
-      pillBg:"#fff7ed",pillColor:"#9a3412",
-      dotColor:"#f97316",
+      test:(s,d)=> s>=140 || d>=90 },
+    { key:"stage1",  name:"고혈압 전단계", icon:"🟠", cls:"grade-stage1",
+      pillBg:"#fff7ed", pillColor:"#9a3412",
+      pillBgDark:"#2b1800", pillColorDark:"#fb923c",
       desc:"생활습관 개선과 정기적인 진료가 권장됩니다.",
-      test:(s,d)=> s>=130 || d>=80
-    },
-    {
-      key:"elevated",
-      name:"주의혈압",
-      icon:"🟡",
-      cls:"grade-elevated",
-      pillBg:"#fffbeb",pillColor:"#92530a",
-      dotColor:"#f59e0b",
+      test:(s,d)=> s>=130 || d>=80 },
+    { key:"elevated",name:"주의혈압",      icon:"🟡", cls:"grade-elevated",
+      pillBg:"#fffbeb", pillColor:"#92530a",
+      pillBgDark:"#2b2200", pillColorDark:"#f5c030",
       desc:"생활습관 개선이 필요한 단계입니다.",
-      test:(s,d)=> s>=120 && d<80
-    },
-    {
-      key:"normal",
-      name:"정상",
-      icon:"✅",
-      cls:"grade-normal",
-      pillBg:"#ecfbf8",pillColor:"#0e7166",
-      dotColor:"#18a999",
+      test:(s,d)=> s>=120 && d<80 },
+    { key:"normal",  name:"정상",          icon:"✅", cls:"grade-normal",
+      pillBg:"#ecfbf8", pillColor:"#0e7166",
+      pillBgDark:"#0e2e28", pillColorDark:"#1fcabb",
       desc:"이상적인 혈압입니다. 현재 상태를 유지하세요.",
-      test:()=> true
-    }
+      test:()=> true }
   ];
 
-  function getGrade(s,d){
-    return GRADES.find(g => g.test(s,d)) || GRADES[GRADES.length-1];
-  }
-
-  // ─── 상태 ──────────────────────────────────────────────────────────────
-  let records = loadRecords();
-  let editingId = null;
-
-  const form          = document.getElementById("bpForm");
-  const recordedAtEl  = document.getElementById("recordedAt");
-  const systolicEl    = document.getElementById("systolic");
-  const diastolicEl   = document.getElementById("diastolic");
-  const pulseEl       = document.getElementById("pulse");
-  const submitBtn     = document.getElementById("submitBtn");
-  const resetBtn      = document.getElementById("resetBtn");
-  const statusEl      = document.getElementById("status");
-  const gradeBox      = document.getElementById("gradeBox");
-  const gradeIcon     = document.getElementById("gradeIcon");
-  const gradeName     = document.getElementById("gradeName");
-  const gradeDesc     = document.getElementById("gradeDesc");
-
-  // ─── 초기화 ────────────────────────────────────────────────────────────
-  function nowLocalDateTime(){
-    const now = new Date();
-    const local = new Date(now.getTime() - now.getTimezoneOffset()*60000);
-    return local.toISOString().slice(0,16);
-  }
+  function getGrade(s,d){ return GRADES.find(g=>g.test(s,d)) || GRADES[GRADES.length-1]; }
+  function isDark(){ return document.documentElement.getAttribute("data-theme")==="dark"; }
 
   function loadRecords(){
     try{
       const raw = localStorage.getItem(STORAGE_KEY);
-      const p = raw ? JSON.parse(raw) : [];
+      const p   = raw ? JSON.parse(raw) : [];
       return Array.isArray(p) ? p : [];
-    }catch{return [];}
+    }catch{ return []; }
   }
+  function saveRecords(){ localStorage.setItem(STORAGE_KEY, JSON.stringify(records)); }
 
-  function saveRecords(){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(records));
+  let records   = loadRecords();
+  let editingId = null;
+
+  function nowLocalDateTime(){
+    const now = new Date();
+    const Y = now.getFullYear();
+    const M = String(now.getMonth()+1).padStart(2,'0');
+    const D = String(now.getDate()).padStart(2,'0');
+    const h = String(now.getHours()).padStart(2,'0');
+    const m = String(now.getMinutes()).padStart(2,'0');
+    return `${Y}-${M}-${D}T${h}:${m}`;
   }
 
   function formatDT(value){
     const d = new Date(value);
     if(isNaN(d)) return value;
-    return new Intl.DateTimeFormat("ko-KR",{
-      year:"numeric",month:"2-digit",day:"2-digit",
-      hour:"2-digit",minute:"2-digit"
-    }).format(d);
+    return new Intl.DateTimeFormat("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).format(d);
   }
 
-  function showStatus(msg, type="ok"){
-    statusEl.textContent = msg;
-    statusEl.className = "status "+type;
+  let toastTimer = null;
+  function showToast(msg){
+    const t = document.getElementById("toast");
+    t.textContent = msg;
+    t.classList.add("show");
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(()=>t.classList.remove("show"), 2600);
   }
-  function clearStatus(){statusEl.textContent="";statusEl.className="status";}
 
-  function resetForm(clearMsg=true){
-    form.reset();
+  const MOON_SVG = `<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" fill="currentColor" stroke="none"/>`;
+  const SUN_SVG  = `<circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/>
+    <line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/>
+    <line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/>
+    <line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/>
+    <line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/>`;
+
+  function applyTheme(dark){
+    document.documentElement.setAttribute("data-theme", dark ? "dark" : "light");
+    document.getElementById("themeLabel").textContent = dark ? "다크 모드" : "라이트 모드";
+    document.getElementById("themeIcon").innerHTML    = dark ? MOON_SVG : SUN_SVG;
+    localStorage.setItem(THEME_KEY, dark ? "dark" : "light");
+    if(records.length) renderChart();
+  }
+
+  document.addEventListener("DOMContentLoaded", function(){
+
+    (function initTheme(){
+      const saved       = localStorage.getItem(THEME_KEY);
+      const prefersDark = window.matchMedia("(prefers-color-scheme:dark)").matches;
+      applyTheme(saved ? saved==="dark" : prefersDark);
+    })();
+
+    document.getElementById("themeToggle").addEventListener("click", function(){
+      applyTheme(!isDark());
+    });
+
+    document.getElementById("backupBtn").addEventListener("click", function(){
+      if(!records.length){ showToast("저장할 기록이 없습니다."); return; }
+      const payload = { version:2, exportedAt: new Date().toISOString(), records };
+      const blob = new Blob([JSON.stringify(payload, null, 2)], {type:"application/json"});
+      const url  = URL.createObjectURL(blob);
+      const a    = document.createElement("a");
+      const now  = new Date();
+      const stamp = `${now.getFullYear()}${String(now.getMonth()+1).padStart(2,'0')}${String(now.getDate()).padStart(2,'0')}_${String(now.getHours()).padStart(2,'0')}${String(now.getMinutes()).padStart(2,'0')}`;
+      a.href     = url;
+      a.download = `혈압기록_백업_${stamp}.json`;
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast(`✅ 백업 저장 완료 (${records.length}건)`);
+    });
+
+    document.getElementById("restoreBtn").addEventListener("click", function(){
+      document.getElementById("restoreFile").click();
+    });
+
+    document.getElementById("restoreFile").addEventListener("change", function(e){
+      const file = e.target.files[0];
+      if(!file) return;
+      const reader = new FileReader();
+      reader.onload = function(evt){
+        try{
+          const parsed = JSON.parse(evt.target.result);
+          let incoming = [];
+          if(Array.isArray(parsed)){
+            incoming = parsed;
+          } else if(parsed.records && Array.isArray(parsed.records)){
+            incoming = parsed.records;
+          } else {
+            showToast("❌ 올바른 백업 파일이 아닙니다."); return;
+          }
+          const valid = incoming.filter(r=>r.id && r.recordedAt && isFinite(r.systolic) && isFinite(r.diastolic) && isFinite(r.pulse));
+          if(!valid.length){ showToast("❌ 유효한 기록이 없습니다."); return; }
+          const existingIds = new Set(records.map(r=>r.id));
+          const newOnes     = valid.filter(r=>!existingIds.has(r.id));
+          records = [...records, ...newOnes];
+          saveRecords();
+          renderAll();
+          showToast(`✅ 불러오기 완료 — 신규 ${newOnes.length}건 추가 (전체 ${records.length}건)`);
+        } catch{
+          showToast("❌ 파일 파싱 오류. 올바른 JSON 파일인지 확인하세요.");
+        }
+        e.target.value = "";
+      };
+      reader.readAsText(file);
+    });
+
+    const form         = document.getElementById("bpForm");
+    const recordedAtEl = document.getElementById("recordedAt");
+    const systolicEl   = document.getElementById("systolic");
+    const diastolicEl  = document.getElementById("diastolic");
+    const pulseEl      = document.getElementById("pulse");
+    const submitBtn    = document.getElementById("submitBtn");
+    const resetBtn     = document.getElementById("resetBtn");
+    const statusEl     = document.getElementById("status");
+    const gradeBox     = document.getElementById("gradeBox");
+    const gradeIcon    = document.getElementById("gradeIcon");
+    const gradeName    = document.getElementById("gradeName");
+    const gradeDesc    = document.getElementById("gradeDesc");
+
+    function showStatus(msg, type="ok"){ statusEl.textContent=msg; statusEl.className="status "+type; }
+    function clearStatus(){ statusEl.textContent=""; statusEl.className="status"; }
+
+    function resetForm(clearMsg=true){
+      form.reset();
+      recordedAtEl.value = nowLocalDateTime();
+      editingId = null;
+      submitBtn.textContent = "기록 추가";
+      gradeBox.className = "grade-box hidden";
+      if(clearMsg) clearStatus();
+    }
+
+    function updateGradePreview(){
+      const s = Number(systolicEl.value), d = Number(diastolicEl.value);
+      if(!systolicEl.value || !diastolicEl.value || isNaN(s) || isNaN(d) || s<=d){
+        gradeBox.className = "grade-box hidden"; return;
+      }
+      const g = getGrade(s,d);
+      gradeBox.className    = "grade-box " + g.cls;
+      gradeIcon.textContent = g.icon;
+      gradeName.textContent = g.name;
+      gradeDesc.textContent = g.desc;
+    }
+
+    systolicEl.addEventListener("input", updateGradePreview);
+    diastolicEl.addEventListener("input", updateGradePreview);
+
+    form.addEventListener("submit", function(e){
+      e.preventDefault();
+      const recordedAt = recordedAtEl.value;
+      const systolic   = Number(systolicEl.value);
+      const diastolic  = Number(diastolicEl.value);
+      const pulse      = Number(pulseEl.value);
+      if(!recordedAt)                                                 return showStatus("기록 날짜/시간을 입력해주세요.", "error");
+      if(!isFinite(systolic)||!isFinite(diastolic)||!isFinite(pulse)) return showStatus("모든 수치를 숫자로 입력해주세요.", "error");
+      if(systolic <= diastolic)                                       return showStatus("최고혈압은 최저혈압보다 크게 입력해주세요.", "error");
+      if(editingId){
+        records = records.map(r=>r.id===editingId ? {...r,recordedAt,systolic,diastolic,pulse} : r);
+        showStatus("기록이 수정되었습니다.", "ok");
+      } else {
+        records.push({id:crypto.randomUUID(), recordedAt, systolic, diastolic, pulse});
+        showStatus("기록이 추가되었습니다.", "ok");
+      }
+      saveRecords();
+      renderAll();
+      resetForm(false);
+    });
+
+    resetBtn.addEventListener("click", function(){ resetForm(); showStatus("새 입력 상태로 초기화되었습니다.", "ok"); });
+
     recordedAtEl.value = nowLocalDateTime();
-    editingId = null;
-    submitBtn.textContent = "기록 추가";
-    gradeBox.className = "grade-box hidden";
-    if(clearMsg) clearStatus();
-  }
-
-  // ─── 실시간 단계 미리보기 ────────────────────────────────────────────
-  function updateGradePreview(){
-    const s = Number(systolicEl.value);
-    const d = Number(diastolicEl.value);
-    if(!systolicEl.value || !diastolicEl.value || isNaN(s) || isNaN(d)){
-      gradeBox.className = "grade-box hidden";
-      return;
-    }
-    if(s <= d){
-      gradeBox.className = "grade-box hidden";
-      return;
-    }
-    const g = getGrade(s,d);
-    gradeBox.className = "grade-box " + g.cls;
-    gradeIcon.textContent = g.icon;
-    gradeName.textContent = g.name;
-    gradeDesc.textContent = g.desc;
-  }
-
-  systolicEl.addEventListener("input", updateGradePreview);
-  diastolicEl.addEventListener("input", updateGradePreview);
-
-  // ─── 폼 제출 ──────────────────────────────────────────────────────────
-  form.addEventListener("submit", e=>{
-    e.preventDefault();
-    const recordedAt = recordedAtEl.value;
-    const systolic   = Number(systolicEl.value);
-    const diastolic  = Number(diastolicEl.value);
-    const pulse      = Number(pulseEl.value);
-
-    if(!recordedAt)                                        return showStatus("기록 날짜/시간을 입력해주세요.", "error");
-    if(!isFinite(systolic)||!isFinite(diastolic)||!isFinite(pulse)) return showStatus("모든 수치를 숫자로 입력해주세요.", "error");
-    if(systolic <= diastolic)                              return showStatus("최고혈압은 최저혈압보다 크게 입력해주세요.", "error");
-
-    if(editingId){
-      records = records.map(r => r.id===editingId ? {...r,recordedAt,systolic,diastolic,pulse} : r);
-      showStatus("기록이 수정되었습니다.", "ok");
-    } else {
-      records.push({id:crypto.randomUUID(), recordedAt, systolic, diastolic, pulse});
-      showStatus("기록이 추가되었습니다.", "ok");
-    }
-    saveRecords();
     renderAll();
-    resetForm(false);
   });
 
-  resetBtn.addEventListener("click",()=>{
-    resetForm();
-    showStatus("새 입력 상태로 초기화되었습니다.", "ok");
-  });
-
-  // ─── 차트 ─────────────────────────────────────────────────────────────
   function renderChart(){
     const sorted = [...records].sort((a,b)=>new Date(a.recordedAt)-new Date(b.recordedAt));
-    const el = document.getElementById("trendChart");
-
+    const el     = document.getElementById("trendChart");
+    const dark   = isDark();
+    const gridC  = dark ? "#263545" : "#eef3f8";
+    const paperC = dark ? "#18252f" : "#ffffff";
+    const fontC  = dark ? "#d6e8f5" : "#16324f";
     if(!sorted.length){
       el.innerHTML='<div class="empty">아직 기록이 없습니다. 왼쪽에서 혈압 기록을 추가해 주세요.</div>';
       return;
     }
-    el.innerHTML="";
-
+    el.innerHTML = "";
     const x = sorted.map(r=>new Date(r.recordedAt));
-
     const traces = [
-      {
-        x, y:sorted.map(r=>r.systolic),
-        type:"scatter", mode:"lines+markers", name:"최고혈압",
-        line:{width:3,color:"#1f7aec"}, marker:{size:8,color:"#1f7aec"},
-        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최고혈압: %{y} mmHg<extra></extra>"
-      },
-      {
-        x, y:sorted.map(r=>r.diastolic),
-        type:"scatter", mode:"lines+markers", name:"최저혈압",
-        line:{width:3,color:"#e94f37"}, marker:{size:8,color:"#e94f37"},
-        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최저혈압: %{y} mmHg<extra></extra>"
-      },
-      {
-        x, y:sorted.map(r=>r.pulse),
-        type:"scatter", mode:"lines+markers", name:"맥박수",
+      { x, y:sorted.map(r=>r.systolic),  type:"scatter", mode:"lines+markers", name:"최고혈압",
+        line:{width:3,color:"#4d9eff"}, marker:{size:8,color:"#4d9eff"},
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최고혈압: %{y} mmHg<extra></extra>" },
+      { x, y:sorted.map(r=>r.diastolic), type:"scatter", mode:"lines+markers", name:"최저혈압",
+        line:{width:3,color:"#ff6b57"}, marker:{size:8,color:"#ff6b57"},
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최저혈압: %{y} mmHg<extra></extra>" },
+      { x, y:sorted.map(r=>r.pulse),     type:"scatter", mode:"lines+markers", name:"맥박수",
         line:{width:3,color:"#18a999",dash:"dot"}, marker:{size:8,color:"#18a999"},
-        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>맥박수: %{y} bpm<extra></extra>"
-      }
+        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>맥박수: %{y} bpm<extra></extra>" }
     ];
-
-    // 정상/주의/고혈압 기준선
-    const refLines = [
-      {y:120, color:"#f59e0b", dash:"dot",  label:"주의혈압 기준(120)"},
-      {y:140, color:"#ef4444", dash:"dash", label:"고혈압 기준(140)"},
-      {y:180, color:"#a21caf", dash:"dash", label:"위기 기준(180)"}
-    ];
-    const shapes = refLines.map(r=>({
-      type:"line", x0:0, x1:1, xref:"paper",
-      y0:r.y, y1:r.y, yref:"y",
-      line:{color:r.color, width:1.5, dash:r.dash}
-    }));
-
+    const shapes = [
+      {y:120,color:"#f59e0b",dash:"dot"},
+      {y:140,color:"#ef4444",dash:"dash"},
+      {y:180,color:"#a21caf",dash:"dash"}
+    ].map(r=>({type:"line",x0:0,x1:1,xref:"paper",y0:r.y,y1:r.y,yref:"y",line:{color:r.color,width:1.5,dash:r.dash}}));
     const layout = {
       margin:{l:52,r:16,t:20,b:52},
-      paper_bgcolor:"white", plot_bgcolor:"white",
+      paper_bgcolor:paperC, plot_bgcolor:paperC,
       hovermode:"x unified",
-      legend:{orientation:"h",x:0,y:1.15},
-      xaxis:{title:"기록 시각",gridcolor:"#eef3f8",tickformat:"%m/%d\n%H:%M"},
-      yaxis:{title:"수치",gridcolor:"#eef3f8",zeroline:false},
-      shapes
+      legend:{orientation:"h",x:0,y:1.15,font:{color:fontC}},
+      xaxis:{title:"기록 시각",gridcolor:gridC,tickformat:"%m/%d\n%H:%M",tickfont:{color:fontC},titlefont:{color:fontC}},
+      yaxis:{title:"수치",gridcolor:gridC,zeroline:false,tickfont:{color:fontC},titlefont:{color:fontC}},
+      shapes,
+      hoverlabel:{bgcolor:dark?"#1e2f3e":"#fff",font:{color:fontC}}
     };
-
     Plotly.newPlot(el, traces, layout, {responsive:true, displayModeBar:false});
   }
 
-  // ─── 순위 보드 ────────────────────────────────────────────────────────
   function renderBoards(){
-    const topSysEl  = document.getElementById("topSystolicBoard");
-    const lowDiaEl  = document.getElementById("lowDiastolicBoard");
-    topSysEl.innerHTML = "";
-    lowDiaEl.innerHTML = "";
-
+    const topSysEl = document.getElementById("topSystolicBoard");
+    const lowDiaEl = document.getElementById("lowDiastolicBoard");
+    topSysEl.innerHTML = ""; lowDiaEl.innerHTML = "";
     if(!records.length){
-      topSysEl.innerHTML='<div class="rank-empty">표시할 기록이 없습니다.</div>';
-      lowDiaEl.innerHTML='<div class="rank-empty">표시할 기록이 없습니다.</div>';
+      topSysEl.innerHTML = '<div class="rank-empty">표시할 기록이 없습니다.</div>';
+      lowDiaEl.innerHTML = '<div class="rank-empty">표시할 기록이 없습니다.</div>';
       return;
     }
-
-    const TOP3_SYS = [...records]
-      .sort((a,b)=>b.systolic-a.systolic||new Date(a.recordedAt)-new Date(b.recordedAt))
-      .slice(0,3);
-    const TOP3_DIA = [...records]
-      .sort((a,b)=>b.diastolic-a.diastolic||new Date(a.recordedAt)-new Date(b.recordedAt))
-      .slice(0,3);
-
+    const TOP3_SYS = [...records].sort((a,b)=>b.systolic -a.systolic ||new Date(a.recordedAt)-new Date(b.recordedAt)).slice(0,3);
+    const TOP3_DIA = [...records].sort((a,b)=>b.diastolic-a.diastolic||new Date(a.recordedAt)-new Date(b.recordedAt)).slice(0,3);
     function buildBoard(container, items, valueKey){
-      const wrap = document.createElement("div");
-      wrap.className = "rank-list";
+      const wrap = document.createElement("div"); wrap.className = "rank-list";
       items.forEach((item,i)=>{
-        const g = getGrade(item.systolic, item.diastolic);
-        const noClass = ["r1","r2","r3"][i] || "r3";
-        const medalLabel = ["🥇 1위","🥈 2위","🥉 3위"][i];
-        const div = document.createElement("div");
-        div.className = "rank-item";
+        const g      = getGrade(item.systolic, item.diastolic);
+        const dark   = isDark();
+        const noClass = ["r1","r2","r3"][i];
+        const medals  = ["🥇 1위","🥈 2위","🥉 3위"];
+        const div    = document.createElement("div"); div.className = "rank-item";
+        const bg     = dark ? g.pillBgDark    : g.pillBg;
+        const col    = dark ? g.pillColorDark : g.pillColor;
         div.innerHTML = `
           <div class="rank-no ${noClass}">${i+1}</div>
           <div class="rank-main">
             <div class="rank-date">${formatDT(item.recordedAt)}</div>
-            <div class="rank-sub">맥박 ${item.pulse} bpm · ${medalLabel}</div>
+            <div class="rank-sub">맥박 ${item.pulse} bpm · ${medals[i]}</div>
           </div>
           <div>
             <div class="rank-value">${item[valueKey]} <span style="font-size:13px;font-weight:600">mmHg</span></div>
             <div class="rank-grade">
-              <span class="pill-grade" style="background:${g.pillBg};color:${g.pillColor}">${g.name}</span>
+              <span class="pill-grade" style="background:${bg};color:${col}">${g.name}</span>
             </div>
-          </div>
-        `;
+          </div>`;
         wrap.appendChild(div);
       });
       container.appendChild(wrap);
     }
-
-    buildBoard(topSysEl,  TOP3_SYS, "systolic");
-    buildBoard(lowDiaEl,  TOP3_DIA, "diastolic");
+    buildBoard(topSysEl, TOP3_SYS, "systolic");
+    buildBoard(lowDiaEl, TOP3_DIA, "diastolic");
   }
 
-  // ─── 테이블 ───────────────────────────────────────────────────────────
   function renderTable(){
-    const tbody = document.getElementById("recordTableBody");
+    const tbody  = document.getElementById("recordTableBody");
     const sorted = [...records].sort((a,b)=>new Date(b.recordedAt)-new Date(a.recordedAt));
     tbody.innerHTML = "";
-
     if(!sorted.length){
-      tbody.innerHTML=`<tr><td colspan="6"><div class="empty">아직 저장된 기록이 없습니다.</div></td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="6"><div class="empty">아직 저장된 기록이 없습니다.</div></td></tr>`;
       return;
     }
-
     sorted.forEach(r=>{
-      const g = getGrade(r.systolic, r.diastolic);
-      const tr = document.createElement("tr");
+      const g   = getGrade(r.systolic, r.diastolic);
+      const dark = isDark();
+      const bg  = dark ? g.pillBgDark    : g.pillBg;
+      const col = dark ? g.pillColorDark : g.pillColor;
+      const tr  = document.createElement("tr");
       tr.innerHTML = `
         <td>${formatDT(r.recordedAt)}</td>
         <td><span class="pill pill-sys">${r.systolic} mmHg</span></td>
         <td><span class="pill pill-dia">${r.diastolic} mmHg</span></td>
         <td><span class="pill pill-bpm">${r.pulse} bpm</span></td>
+        <td><span class="pill-grade" style="background:${bg};color:${col};padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;">${g.icon} ${g.name}</span></td>
         <td>
-          <span class="pill-grade" style="background:${g.pillBg};color:${g.pillColor};padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;">
-            ${g.icon} ${g.name}
-          </span>
-        </td>
-        <td><button class="btn-edit" data-id="${r.id}">수정</button></td>
-      `;
+          <button class="btn-edit"   data-id="${r.id}">수정</button>
+          <button class="btn-delete" data-id="${r.id}">삭제</button>
+        </td>`;
       tbody.appendChild(tr);
     });
-
     document.querySelectorAll(".btn-edit").forEach(btn=>{
       btn.addEventListener("click",()=>{
         const target = records.find(r=>r.id===btn.dataset.id);
         if(!target) return;
-        editingId         = target.id;
-        recordedAtEl.value = target.recordedAt;
-        systolicEl.value  = target.systolic;
-        diastolicEl.value = target.diastolic;
-        pulseEl.value     = target.pulse;
-        submitBtn.textContent = "수정 저장";
-        updateGradePreview();
-        showStatus("수정 모드입니다. 값을 바꾼 뒤 '수정 저장'을 눌러주세요.", "ok");
+        editingId = target.id;
+        document.getElementById("recordedAt").value = target.recordedAt;
+        document.getElementById("systolic").value   = target.systolic;
+        document.getElementById("diastolic").value  = target.diastolic;
+        document.getElementById("pulse").value      = target.pulse;
+        document.getElementById("submitBtn").textContent = "수정 저장";
+        const g  = getGrade(target.systolic, target.diastolic);
+        const gb = document.getElementById("gradeBox");
+        gb.className = "grade-box " + g.cls;
+        document.getElementById("gradeIcon").textContent = g.icon;
+        document.getElementById("gradeName").textContent = g.name;
+        document.getElementById("gradeDesc").textContent = g.desc;
+        document.getElementById("status").textContent = "수정 모드입니다. 값을 바꾼 뒤 '수정 저장'을 눌러주세요.";
+        document.getElementById("status").className = "status ok";
         window.scrollTo({top:0,behavior:"smooth"});
+      });
+    });
+    document.querySelectorAll(".btn-delete").forEach(btn=>{
+      btn.addEventListener("click",()=>{
+        if(!confirm("이 기록을 삭제할까요?")) return;
+        records = records.filter(r=>r.id !== btn.dataset.id);
+        saveRecords();
+        renderAll();
+        showToast("🗑️ 기록이 삭제되었습니다.");
       });
     });
   }
 
-  function renderAll(){
-    renderChart();
-    renderBoards();
-    renderTable();
-  }
+  function renderAll(){ renderChart(); renderBoards(); renderTable(); }
 
   window.addEventListener("resize",()=>{
-    const el=document.getElementById("trendChart");
+    const el = document.getElementById("trendChart");
     if(records.length && el) Plotly.Plots.resize(el);
   });
-
-  recordedAtEl.value = nowLocalDateTime();
-  renderAll();
 </script>
 </body>
 </html>
