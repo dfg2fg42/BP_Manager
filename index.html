@@ -7,109 +7,161 @@
   <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
   <style>
     :root{
-      --bg:#f4f7fb;
+      --bg:#eef5f8;
       --card:#ffffff;
-      --line:#d9e2ec;
-      --text:#16324f;
-      --sub:#5b728a;
-      --accent:#1f7aec;
-      --accent2:#e94f37;
-      --accent3:#18a999;
-      --danger:#d64545;
-      --shadow:0 10px 30px rgba(22,50,79,.08);
-      --radius:18px;
-      --hero-bg:linear-gradient(180deg,#f7fbff 0%,#eef4fa 100%);
+      --line:#d7e2e8;
+      --text:#17212b;
+      --sub:#60707f;
+      --accent:#0f766e;
+      --accent-dark:#0b4f4a;
+      --sys:#dc2626;
+      --dia:#2563eb;
+      --pulse:#0f766e;
+      --danger:#b42318;
+      --shadow:0 18px 42px rgba(28,44,56,.12);
+      --radius:8px;
       --input-bg:#fff;
-      --table-head:#f7fbff;
-      --rank-bg:#fbfdff;
-      --empty-bg:#fbfdff;
+      --table-head:#f4f8fa;
+      --rank-bg:#f8fbfc;
+      --empty-bg:#f8fbfc;
       --chart-bg:#ffffff;
-      --btn-sec-bg:#eef4fb;
+      --btn-sec-bg:#edf4f7;
       --btn-sec-color:var(--text);
     }
     [data-theme="dark"]{
       --bg:#0f1923;
-      --card:#18252f;
-      --line:#263545;
-      --text:#d6e8f5;
-      --sub:#7a9ab5;
-      --accent:#4d9eff;
-      --accent2:#ff6b57;
-      --accent3:#1fcabb;
-      --danger:#ff6b6b;
-      --shadow:0 10px 30px rgba(0,0,0,.35);
-      --hero-bg:linear-gradient(180deg,#101c27 0%,#0d1820 100%);
-      --input-bg:#1e2f3e;
-      --table-head:#1a2b38;
-      --rank-bg:#1a2b38;
-      --empty-bg:#1a2b38;
-      --chart-bg:#18252f;
-      --btn-sec-bg:#1e3044;
-      --btn-sec-color:#d6e8f5;
+      --card:#172530;
+      --line:#263848;
+      --text:#dceaf2;
+      --sub:#89a2b5;
+      --accent:#2dd4bf;
+      --accent-dark:#5eead4;
+      --sys:#fb7185;
+      --dia:#60a5fa;
+      --pulse:#2dd4bf;
+      --danger:#fb7185;
+      --shadow:0 18px 42px rgba(0,0,0,.32);
+      --input-bg:#1d2f3c;
+      --table-head:#1d2f3c;
+      --rank-bg:#1b2a36;
+      --empty-bg:#1b2a36;
+      --chart-bg:#172530;
+      --btn-sec-bg:#203443;
+      --btn-sec-color:#dceaf2;
     }
     *{box-sizing:border-box}
     body{
       margin:0;
+      min-height:100vh;
       font-family:"Segoe UI","Apple SD Gothic Neo","Malgun Gothic",sans-serif;
-      background:var(--hero-bg);
+      background:var(--bg);
       color:var(--text);
       transition:background .25s,color .25s;
     }
-    .wrap{max-width:1280px;margin:0 auto;padding:20px;}
-    .hero{margin-bottom:18px;display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap;}
-    .hero-text h1{margin:0 0 8px;font-size:clamp(24px,3vw,36px);font-weight:800;letter-spacing:-0.02em;}
-    .hero-text p{margin:0;color:var(--sub);font-size:15px;}
-    .hero-actions{display:flex;gap:10px;align-items:center;flex-wrap:wrap;padding-top:4px;}
+    .wrap{max-width:1280px;margin:0 auto;padding:24px;}
+    .hero{
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      gap:20px;
+      margin-bottom:18px;
+      padding:24px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:var(--card);
+      box-shadow:var(--shadow);
+    }
+    .hero-main{display:flex;align-items:center;gap:18px;min-width:0;}
+    .bp-emblem{
+      flex:0 0 auto;
+      width:74px;
+      height:74px;
+      color:var(--sys);
+    }
+    .eyebrow{margin-bottom:7px;color:var(--accent);font-size:12px;font-weight:900;text-transform:uppercase;}
+    .hero-text h1{margin:0;font-size:clamp(24px,3vw,34px);font-weight:900;letter-spacing:0;}
+    .hero-text p{margin:7px 0 0;color:var(--sub);font-size:14px;line-height:1.5;}
+    .hero-vitals{display:flex;gap:8px;flex-wrap:wrap;margin-top:14px;}
+    .vital-chip{
+      display:inline-flex;
+      align-items:center;
+      min-height:30px;
+      padding:5px 10px;
+      border-radius:999px;
+      background:#f8fbfc;
+      border:1px solid var(--line);
+      color:var(--sub);
+      font-size:12px;
+      font-weight:800;
+    }
+    .vital-chip.sys{color:var(--sys);}
+    .vital-chip.dia{color:var(--dia);}
+    .vital-chip.pulse{color:var(--pulse);}
+    [data-theme="dark"] .vital-chip{background:#1b2a36;}
+    .hero-actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;justify-content:flex-end;}
     .icon-btn{
       display:flex;align-items:center;gap:7px;
-      padding:10px 16px;border-radius:14px;font-size:14px;font-weight:700;cursor:pointer;border:none;
-      transition:background .2s,transform .05s;
+      min-height:40px;
+      padding:9px 13px;border-radius:var(--radius);font-size:13px;font-weight:800;cursor:pointer;border:1px solid transparent;
+      transition:background .2s,transform .05s,border-color .2s;
     }
     .icon-btn:active{transform:translateY(1px);}
-    .btn-theme{background:var(--btn-sec-bg);color:var(--btn-sec-color);}
-    .btn-backup{background:#ecfbf8;color:#0e7166;}
-    .btn-restore{background:#edf4ff;color:#1a56a8;}
-    [data-theme="dark"] .btn-backup{background:#193a30;color:#1fcabb;}
-    [data-theme="dark"] .btn-restore{background:#1a2f48;color:#4d9eff;}
+    .btn-theme{background:var(--btn-sec-bg);color:var(--btn-sec-color);border-color:var(--line);}
+    .btn-backup{background:#f0fdfa;color:#0f766e;border-color:#b6ece5;}
+    .btn-restore{background:#eff6ff;color:#1d4ed8;border-color:#bfdbfe;}
+    [data-theme="dark"] .btn-backup{background:#11372f;color:#5eead4;border-color:#1e5b50;}
+    [data-theme="dark"] .btn-restore{background:#172f4d;color:#93c5fd;border-color:#244a72;}
     .icon-btn svg{width:17px;height:17px;flex-shrink:0;}
     .grid{display:grid;grid-template-columns:380px 1fr;gap:18px;align-items:start;}
     .left-col,.right-col{display:grid;gap:18px;}
-    .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);box-shadow:var(--shadow);overflow:hidden;transition:background .25s,border-color .25s;}
+    .card{
+      background:var(--card);
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      box-shadow:var(--shadow);
+      overflow:hidden;
+      transition:background .25s,border-color .25s;
+    }
     .card-header{padding:18px 18px 8px;}
-    .card-header h2{margin:0;font-size:19px;font-weight:800;letter-spacing:-0.02em;}
-    .card-header p{margin:6px 0 0;font-size:13px;color:var(--sub);}
+    .card-header h2{margin:0;font-size:18px;font-weight:900;letter-spacing:0;}
+    .card-header p{margin:6px 0 0;font-size:13px;color:var(--sub);line-height:1.5;}
     .card-body{padding:18px;}
     .form-grid{display:grid;gap:14px;}
     .field{display:grid;gap:7px;}
-    label{font-size:14px;font-weight:700;}
-    input{width:100%;padding:14px;border:1px solid var(--line);border-radius:14px;font-size:16px;outline:none;background:var(--input-bg);color:var(--text);transition:border-color .2s,box-shadow .2s;}
-    input:focus{border-color:rgba(31,122,236,.75);box-shadow:0 0 0 4px rgba(31,122,236,.12);}
+    label{font-size:14px;font-weight:800;}
+    input{
+      width:100%;height:46px;padding:0 13px;border:1px solid #cbd8df;border-radius:var(--radius);
+      font-size:16px;outline:none;background:var(--input-bg);color:var(--text);
+      transition:border-color .2s,box-shadow .2s;
+    }
+    input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(15,118,110,.15);}
     .unit{position:relative;}
-    .unit span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:13px;pointer-events:none;background:var(--input-bg);padding-left:6px;}
+    .unit span{position:absolute;right:13px;top:50%;transform:translateY(-50%);color:var(--sub);font-size:13px;pointer-events:none;background:var(--input-bg);padding-left:6px;}
     .unit input{padding-right:80px;}
     .btn-row{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px;}
-    button{border:none;border-radius:14px;padding:14px 16px;font-size:15px;font-weight:800;cursor:pointer;transition:transform .05s ease,box-shadow .2s ease;}
+    button{border:none;border-radius:var(--radius);padding:13px 15px;font-size:15px;font-weight:900;cursor:pointer;transition:transform .05s ease,box-shadow .2s ease,background .2s;}
     button:active{transform:translateY(1px);}
-    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 8px 20px rgba(31,122,236,.22);}
-    .btn-secondary{background:var(--btn-sec-bg);color:var(--btn-sec-color);}
-    .status{margin-top:12px;min-height:22px;font-size:14px;font-weight:700;}
-    .status.ok{color:var(--accent3);}
+    .btn-primary{background:var(--accent);color:#fff;box-shadow:0 10px 20px rgba(15,118,110,.18);}
+    .btn-primary:hover{background:var(--accent-dark);}
+    .btn-secondary{background:var(--btn-sec-bg);color:var(--btn-sec-color);border:1px solid var(--line);}
+    .status{margin-top:12px;min-height:22px;font-size:14px;font-weight:800;}
+    .status.ok{color:var(--pulse);}
     .status.error{color:var(--danger);}
     .grade-box{
-      padding:16px;border-radius:16px;
-      display:grid;grid-template-columns:auto 1fr;gap:10px 14px;align-items:center;
-      border:2px solid;margin-bottom:4px;
+      padding:15px;border-radius:var(--radius);
+      display:grid;grid-template-columns:auto 1fr;gap:9px 12px;align-items:center;
+      border:1px solid;margin-bottom:4px;
     }
     .grade-box.hidden{display:none;}
-    .grade-icon{font-size:28px;line-height:1;}
-    .grade-name{font-size:17px;font-weight:900;letter-spacing:-0.02em;}
-    .grade-desc{font-size:13px;grid-column:2;margin-top:-4px;opacity:.85;line-height:1.5;}
-    .grade-normal{background:#ecfbf8;border-color:#18a999;color:#0e7166;}
+    .grade-icon{font-size:24px;line-height:1;}
+    .grade-name{font-size:17px;font-weight:900;letter-spacing:0;}
+    .grade-desc{font-size:13px;grid-column:2;margin-top:-3px;opacity:.9;line-height:1.5;}
+    .grade-normal{background:#f0fdfa;border-color:#5eead4;color:#0f766e;}
     .grade-elevated{background:#fffbeb;border-color:#f59e0b;color:#92530a;}
     .grade-stage1{background:#fff7ed;border-color:#f97316;color:#9a3412;}
     .grade-stage2{background:#fef2f2;border-color:#ef4444;color:#991b1b;}
     .grade-crisis{background:#fdf2f8;border-color:#a21caf;color:#6b21a8;}
-    [data-theme="dark"] .grade-normal{background:#0e2e28;border-color:#18a999;color:#1fcabb;}
+    [data-theme="dark"] .grade-normal{background:#0f302b;border-color:#2dd4bf;color:#5eead4;}
     [data-theme="dark"] .grade-elevated{background:#2b2200;border-color:#f59e0b;color:#f5c030;}
     [data-theme="dark"] .grade-stage1{background:#2b1800;border-color:#f97316;color:#fb923c;}
     [data-theme="dark"] .grade-stage2{background:#2d0a0a;border-color:#ef4444;color:#f87171;}
@@ -117,70 +169,114 @@
     .grade-legend{display:grid;gap:7px;}
     .legend-item{display:grid;grid-template-columns:12px 1fr auto auto;gap:0 10px;align-items:center;font-size:13px;}
     .legend-dot{width:12px;height:12px;border-radius:50%;}
-    .legend-label{font-weight:700;}
+    .legend-label{font-weight:800;}
     .legend-range{color:var(--sub);font-size:12px;}
     .chart-box{min-height:400px;}
-    #trendChart{width:100%;height:420px;}
+    .chart-summary{
+      display:grid;
+      grid-template-columns:repeat(3,minmax(0,1fr));
+      gap:10px;
+      margin-bottom:8px;
+    }
+    .chart-summary-card{
+      min-width:0;
+      padding:12px 13px;
+      border:1px solid var(--line);
+      border-radius:var(--radius);
+      background:#f8fbfc;
+    }
+    [data-theme="dark"] .chart-summary-card{background:#1b2a36;}
+    .chart-summary-card.sys{border-left:4px solid var(--sys);}
+    .chart-summary-card.dia{border-left:4px solid var(--dia);}
+    .chart-summary-card.pulse{border-left:4px solid var(--pulse);}
+    .chart-summary-label{display:block;color:var(--sub);font-size:12px;font-weight:800;}
+    .chart-summary-value{display:block;margin-top:4px;font-size:22px;font-weight:900;line-height:1;color:var(--text);}
+    .chart-summary-value small{font-size:12px;font-weight:800;color:var(--sub);}
+    .chart-delta{display:block;margin-top:7px;font-size:12px;font-weight:900;}
+    .chart-delta.up{color:var(--sys);}
+    .chart-delta.down{color:var(--pulse);}
+    .chart-delta.flat{color:var(--sub);}
+    #trendChart{width:100%;height:390px;}
     .board-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;}
     .rank-list{display:grid;gap:10px;}
     .rank-item{
-      display:grid;grid-template-columns:44px 1fr auto;gap:10px;align-items:center;
-      padding:12px 14px;border:1px solid var(--line);border-radius:14px;background:var(--rank-bg);
+      display:grid;grid-template-columns:42px 1fr auto;gap:10px;align-items:center;
+      padding:12px 14px;border:1px solid var(--line);border-radius:var(--radius);background:var(--rank-bg);
     }
-    .rank-no{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-weight:900;color:#fff;font-size:15px;}
-    .rank-no.r1{background:linear-gradient(135deg,#f59e0b,#fcd34d);}
-    .rank-no.r2{background:linear-gradient(135deg,#9ca3af,#d1d5db);}
-    .rank-no.r3{background:linear-gradient(135deg,#cd7c47,#e4a97a);}
+    .rank-no{width:34px;height:34px;border-radius:999px;display:grid;place-items:center;font-weight:900;color:#fff;font-size:14px;}
+    .rank-no.r1{background:#dc2626;}
+    .rank-no.r2{background:#ef4444;}
+    .rank-no.r3{background:#f87171;}
     .rank-main{min-width:0;}
-    .rank-date{font-size:14px;font-weight:700;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+    .rank-date{font-size:14px;font-weight:800;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
     .rank-sub{margin-top:2px;font-size:12px;color:var(--sub);}
-    .rank-value{font-size:18px;font-weight:900;letter-spacing:-0.02em;text-align:right;}
-    .rank-grade{font-size:11px;font-weight:700;text-align:right;margin-top:2px;}
-    .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:14px;color:var(--sub);text-align:center;background:var(--empty-bg);}
-    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:16px;}
+    .rank-value{font-size:18px;font-weight:900;letter-spacing:0;text-align:right;}
+    .rank-grade{font-size:11px;font-weight:800;text-align:right;margin-top:2px;}
+    .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--sub);text-align:center;background:var(--empty-bg);}
+    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--radius);}
     table{width:100%;border-collapse:collapse;min-width:820px;background:var(--card);}
-    thead th{position:sticky;top:0;background:var(--table-head);color:var(--text);font-size:13px;text-align:left;padding:14px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
-    tbody td{padding:14px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+    thead th{position:sticky;top:0;background:var(--table-head);color:var(--text);font-size:13px;text-align:left;padding:13px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
+    tbody td{padding:13px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
     tbody tr:hover{background:var(--rank-bg);}
-    .pill{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
-    .pill-sys{background:#edf4ff;color:#1a56a8;}
-    .pill-dia{background:#fff0ee;color:#c0392b;}
-    .pill-bpm{background:#ecfbf8;color:#0e7166;}
-    [data-theme="dark"] .pill-sys{background:#1a2f48;color:#4d9eff;}
-    [data-theme="dark"] .pill-dia{background:#2d1818;color:#ff6b57;}
-    [data-theme="dark"] .pill-bpm{background:#0e2e28;color:#1fcabb;}
-    .pill-grade{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;}
-    .btn-edit{padding:9px 12px;border-radius:12px;background:#edf4ff;color:#1a56a8;font-size:13px;font-weight:800;border:none;cursor:pointer;}
-    [data-theme="dark"] .btn-edit{background:#1a2f48;color:#4d9eff;}
-    .btn-delete{padding:9px 12px;border-radius:12px;background:#fef2f2;color:#991b1b;font-size:13px;font-weight:800;border:none;cursor:pointer;margin-left:6px;}
+    .pill{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:900;font-size:12px;}
+    .pill-sys{background:#fef2f2;color:#991b1b;}
+    .pill-dia{background:#eff6ff;color:#1d4ed8;}
+    .pill-bpm{background:#f0fdfa;color:#0f766e;}
+    [data-theme="dark"] .pill-sys{background:#2d0a0a;color:#fb7185;}
+    [data-theme="dark"] .pill-dia{background:#172f4d;color:#93c5fd;}
+    [data-theme="dark"] .pill-bpm{background:#0f302b;color:#5eead4;}
+    .pill-grade{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:900;font-size:12px;}
+    .btn-edit{padding:8px 11px;border-radius:var(--radius);background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:900;border:none;cursor:pointer;}
+    [data-theme="dark"] .btn-edit{background:#172f4d;color:#93c5fd;}
+    .btn-delete{padding:8px 11px;border-radius:var(--radius);background:#fef2f2;color:#991b1b;font-size:13px;font-weight:900;border:none;cursor:pointer;margin-left:6px;}
     [data-theme="dark"] .btn-delete{background:#2d0a0a;color:#f87171;}
     .empty{padding:28px;text-align:center;color:var(--sub);}
     #toast{
       position:fixed;bottom:28px;left:50%;transform:translateX(-50%) translateY(20px);
-      background:#16324f;color:#fff;padding:13px 22px;border-radius:14px;font-size:14px;font-weight:700;
+      background:#17212b;color:#fff;padding:13px 22px;border-radius:var(--radius);font-size:14px;font-weight:800;
       opacity:0;pointer-events:none;transition:opacity .3s,transform .3s;z-index:9999;white-space:nowrap;
     }
     #toast.show{opacity:1;transform:translateX(-50%) translateY(0);}
-    [data-theme="dark"] #toast{background:#4d9eff;color:#0f1923;}
+    [data-theme="dark"] #toast{background:#2dd4bf;color:#0f1923;}
     @media(max-width:980px){
+      .hero{align-items:flex-start;flex-direction:column;}
+      .hero-actions{justify-content:flex-start;}
       .grid{grid-template-columns:1fr;}
       .board-grid{grid-template-columns:1fr;}
       #trendChart{height:360px;}
     }
     @media(max-width:640px){
       .wrap{padding:14px;}
+      .hero{padding:18px;}
+      .hero-main{align-items:flex-start;}
+      .bp-emblem{width:58px;height:58px;}
       .card-header,.card-body{padding:14px;}
       .btn-row{grid-template-columns:1fr;}
-      .hero{flex-direction:column;}
+      .chart-summary{grid-template-columns:1fr;}
+      .legend-item{grid-template-columns:12px 1fr;row-gap:4px;}
+      .legend-range{grid-column:2;}
     }
   </style>
 </head>
 <body>
 <div class="wrap">
   <section class="hero">
-    <div class="hero-text">
-      <h1>🩺 혈압관리 매니저</h1>
-      <p>최고혈압, 최저혈압, 맥박수를 기록하고 추세 그래프와 순위 보드로 한눈에 확인합니다.</p>
+    <div class="hero-main">
+      <svg class="bp-emblem" viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+        <path d="M60 101s-35-20.5-43.4-45.2C10.6 38.3 21.4 24 36.4 24c8.4 0 15.2 4.2 19.6 10.5C60.4 28.2 67.2 24 75.6 24c15 0 25.8 14.3 19.8 31.8C87 80.5 60 101 60 101z" fill="#fee2e2" stroke="currentColor" stroke-width="4"/>
+        <path d="M28 60h17l7-15 10 30 8-20h22" fill="none" stroke="#2563eb" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        <circle cx="84" cy="42" r="9" fill="#0f766e"/>
+      </svg>
+      <div class="hero-text">
+        <div class="eyebrow">Blood Pressure Manager</div>
+        <h1>혈압관리 매니저</h1>
+        <p>최고혈압, 최저혈압, 맥박수 기록을 한 화면에서 관리합니다.</p>
+        <div class="hero-vitals" aria-label="관리 지표">
+          <span class="vital-chip sys">SYS 최고혈압</span>
+          <span class="vital-chip dia">DIA 최저혈압</span>
+          <span class="vital-chip pulse">PULSE 맥박</span>
+        </div>
+      </div>
     </div>
     <div class="hero-actions">
       <button class="icon-btn btn-theme" id="themeToggle" title="테마 전환">
@@ -304,10 +400,11 @@
     <div class="right-col">
       <div class="card">
         <div class="card-header">
-          <h2>Trend 그래프</h2>
-          <p>시간순으로 최고혈압, 최저혈압, 맥박수 추이를 함께 표시합니다.</p>
+          <h2>혈압 추세 그래프</h2>
+          <p>혈압 범위와 맥박 변화를 분리해 최근 추이를 빠르게 확인합니다.</p>
         </div>
         <div class="card-body chart-box">
+          <div id="chartSummary" class="chart-summary"></div>
           <div id="trendChart"></div>
         </div>
       </div>
@@ -315,7 +412,7 @@
       <div class="board-grid">
         <div class="card">
           <div class="card-header">
-            <h2>🔴 최고혈압 순위</h2>
+            <h2>최고혈압 순위</h2>
             <p>수축기 혈압 기준 상위 3위까지 표시합니다.</p>
           </div>
           <div class="card-body">
@@ -324,7 +421,7 @@
         </div>
         <div class="card">
           <div class="card-header">
-            <h2>🔵 최저혈압 순위</h2>
+            <h2>최저혈압 순위</h2>
             <p>이완기 혈압 기준 상위 3위까지 표시합니다.</p>
           </div>
           <div class="card-body">
@@ -581,40 +678,131 @@
   function renderChart(){
     const sorted = [...records].sort((a,b)=>new Date(a.recordedAt)-new Date(b.recordedAt));
     const el     = document.getElementById("trendChart");
+    const summary = document.getElementById("chartSummary");
     const dark   = isDark();
     const gridC  = dark ? "#263545" : "#eef3f8";
     const paperC = dark ? "#18252f" : "#ffffff";
     const fontC  = dark ? "#d6e8f5" : "#16324f";
     if(!sorted.length){
+      summary.innerHTML = "";
       el.innerHTML='<div class="empty">아직 기록이 없습니다. 왼쪽에서 혈압 기록을 추가해 주세요.</div>';
       return;
     }
     el.innerHTML = "";
+    const latest = sorted[sorted.length - 1];
+    const previous = sorted.length > 1 ? sorted[sorted.length - 2] : null;
+    function deltaInfo(key, unit){
+      if(!previous) return { text:"첫 기록", cls:"flat" };
+      const diff = latest[key] - previous[key];
+      if(diff === 0) return { text:"이전과 동일", cls:"flat" };
+      return {
+        text:`이전 대비 ${diff > 0 ? "+" : "-"}${Math.abs(diff)} ${unit}`,
+        cls:diff > 0 ? "up" : "down"
+      };
+    }
+    const summaryItems = [
+      { label:"최근 최고혈압", value:latest.systolic, unit:"mmHg", key:"systolic", cls:"sys" },
+      { label:"최근 최저혈압", value:latest.diastolic, unit:"mmHg", key:"diastolic", cls:"dia" },
+      { label:"최근 맥박", value:latest.pulse, unit:"bpm", key:"pulse", cls:"pulse" }
+    ];
+    summary.innerHTML = summaryItems.map(item=>{
+      const delta = deltaInfo(item.key, item.unit);
+      return `
+        <div class="chart-summary-card ${item.cls}">
+          <span class="chart-summary-label">${item.label}</span>
+          <span class="chart-summary-value">${item.value} <small>${item.unit}</small></span>
+          <span class="chart-delta ${delta.cls}">${delta.text}</span>
+        </div>`;
+    }).join("");
+
     const x = sorted.map(r=>new Date(r.recordedAt));
+    const systolic = sorted.map(r=>r.systolic);
+    const diastolic = sorted.map(r=>r.diastolic);
+    const pulse = sorted.map(r=>r.pulse);
+    const bpValues = [...systolic, ...diastolic];
+    const pulseValues = [...pulse];
+    const lastMarkerSizes = sorted.map((_,i)=>i === sorted.length - 1 ? 11 : 7);
+    const rawMin = Math.min(...bpValues);
+    const rawMax = Math.max(...bpValues);
+    let bpMin = Math.max(40, Math.floor((rawMin - 8) / 10) * 10);
+    let bpMax = Math.ceil((rawMax + 8) / 10) * 10;
+    if(rawMax >= 108 && bpMax < 145) bpMax = 145;
+    if(rawMax >= 155 && bpMax < 185) bpMax = 185;
+    if(bpMax - bpMin < 40) bpMax = bpMin + 40;
+
+    const pulseMinRaw = Math.min(...pulseValues);
+    const pulseMaxRaw = Math.max(...pulseValues);
+    let pulseMin = Math.max(30, Math.floor((pulseMinRaw - 8) / 5) * 5);
+    let pulseMax = Math.ceil((pulseMaxRaw + 8) / 5) * 5;
+    if(pulseMax - pulseMin < 20){
+      const mid = (pulseMax + pulseMin) / 2;
+      pulseMin = Math.max(30, Math.floor(mid - 10));
+      pulseMax = Math.ceil(mid + 10);
+    }
+
+    const bandColor = dark
+      ? { normal:"rgba(45,212,191,.08)", caution:"rgba(245,158,11,.09)", high:"rgba(248,113,113,.10)", crisis:"rgba(217,70,239,.10)" }
+      : { normal:"rgba(15,118,110,.06)", caution:"rgba(245,158,11,.08)", high:"rgba(220,38,38,.08)", crisis:"rgba(162,28,175,.08)" };
+    function band(y0, y1, color){
+      const from = Math.max(bpMin, y0);
+      const to = Math.min(bpMax, y1);
+      if(to <= from) return null;
+      return { type:"rect", xref:"paper", x0:0, x1:1, yref:"y", y0:from, y1:to, fillcolor:color, opacity:1, layer:"below", line:{width:0} };
+    }
+    const bands = [
+      band(bpMin, 120, bandColor.normal),
+      band(120, 140, bandColor.caution),
+      band(140, 180, bandColor.high),
+      band(180, bpMax, bandColor.crisis)
+    ].filter(Boolean);
+    const guideLines = [
+      {y:120,color:"#f59e0b",dash:"dot",text:"주의 120"},
+      {y:140,color:"#ef4444",dash:"dash",text:"고혈압 140"},
+      {y:180,color:"#a21caf",dash:"dash",text:"위기 180"}
+    ].filter(g=>g.y >= bpMin && g.y <= bpMax);
+    const shapes = [
+      ...bands,
+      ...guideLines.map(g=>({
+        type:"line",x0:0,x1:1,xref:"paper",y0:g.y,y1:g.y,yref:"y",
+        line:{color:g.color,width:1.3,dash:g.dash}
+      }))
+    ];
+    const annotations = guideLines.map(g=>({
+      xref:"paper", x:.995, xanchor:"right", yref:"y", y:g.y, yanchor:"bottom",
+      text:g.text, showarrow:false, font:{size:11,color:g.color}, bgcolor:paperC, borderpad:2
+    }));
     const traces = [
-      { x, y:sorted.map(r=>r.systolic),  type:"scatter", mode:"lines+markers", name:"최고혈압",
-        line:{width:3,color:"#4d9eff"}, marker:{size:8,color:"#4d9eff"},
-        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최고혈압: %{y} mmHg<extra></extra>" },
-      { x, y:sorted.map(r=>r.diastolic), type:"scatter", mode:"lines+markers", name:"최저혈압",
-        line:{width:3,color:"#ff6b57"}, marker:{size:8,color:"#ff6b57"},
-        hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>최저혈압: %{y} mmHg<extra></extra>" },
-      { x, y:sorted.map(r=>r.pulse),     type:"scatter", mode:"lines+markers", name:"맥박수",
-        line:{width:3,color:"#18a999",dash:"dot"}, marker:{size:8,color:"#18a999"},
+      { x, y:diastolic, type:"scatter", mode:"lines+markers", name:"최저혈압",
+        legendrank:2,
+        line:{width:3,color:"#2563eb"}, marker:{size:lastMarkerSizes,color:"#2563eb",line:{width:2,color:paperC}},
+        hovertemplate:"최저혈압: %{y} mmHg<extra></extra>" },
+      { x, y:systolic,  type:"scatter", mode:"lines+markers", name:"최고혈압",
+        legendrank:1, fill:"tonexty", fillcolor:dark ? "rgba(248,113,113,.16)" : "rgba(220,38,38,.10)",
+        line:{width:3,color:"#dc2626"}, marker:{size:lastMarkerSizes,color:"#dc2626",line:{width:2,color:paperC}},
+        hovertemplate:"최고혈압: %{y} mmHg<extra></extra>" },
+      { x, y:pulse, type:"scatter", mode:"lines+markers", name:"맥박수",
+        legendrank:3, yaxis:"y2",
+        line:{width:2.6,color:"#0f766e",dash:"dot"}, marker:{size:lastMarkerSizes,color:"#0f766e",line:{width:2,color:paperC}},
         hovertemplate:"%{x|%Y-%m-%d %H:%M}<br>맥박수: %{y} bpm<extra></extra>" }
     ];
-    const shapes = [
-      {y:120,color:"#f59e0b",dash:"dot"},
-      {y:140,color:"#ef4444",dash:"dash"},
-      {y:180,color:"#a21caf",dash:"dash"}
-    ].map(r=>({type:"line",x0:0,x1:1,xref:"paper",y0:r.y,y1:r.y,yref:"y",line:{color:r.color,width:1.5,dash:r.dash}}));
     const layout = {
-      margin:{l:52,r:16,t:20,b:52},
+      margin:{l:54,r:64,t:22,b:52},
       paper_bgcolor:paperC, plot_bgcolor:paperC,
       hovermode:"x unified",
-      legend:{orientation:"h",x:0,y:1.15,font:{color:fontC}},
-      xaxis:{title:"기록 시각",gridcolor:gridC,tickformat:"%m/%d\n%H:%M",tickfont:{color:fontC},titlefont:{color:fontC}},
-      yaxis:{title:"수치",gridcolor:gridC,zeroline:false,tickfont:{color:fontC},titlefont:{color:fontC}},
-      shapes,
+      legend:{orientation:"h",x:0,y:1.12,font:{color:fontC},traceorder:"normal"},
+      xaxis:{
+        title:"기록 시각",gridcolor:gridC,tickformat:"%m/%d\n%H:%M",nticks:Math.min(6, Math.max(3, sorted.length)),
+        tickfont:{color:fontC},titlefont:{color:fontC},automargin:true
+      },
+      yaxis:{
+        title:"혈압(mmHg)",range:[bpMin,bpMax],gridcolor:gridC,zeroline:false,
+        tickfont:{color:fontC},titlefont:{color:fontC},automargin:true
+      },
+      yaxis2:{
+        title:"맥박(bpm)",range:[pulseMin,pulseMax],overlaying:"y",side:"right",showgrid:false,zeroline:false,
+        tickfont:{color:"#0f766e"},titlefont:{color:"#0f766e"},automargin:true
+      },
+      shapes, annotations,
       hoverlabel:{bgcolor:dark?"#1e2f3e":"#fff",font:{color:fontC}}
     };
     Plotly.newPlot(el, traces, layout, {responsive:true, displayModeBar:false});
