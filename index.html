@@ -213,22 +213,36 @@
     .rank-value{font-size:18px;font-weight:900;letter-spacing:0;text-align:right;}
     .rank-grade{font-size:11px;font-weight:800;text-align:right;margin-top:2px;}
     .rank-empty{padding:18px;border:1px dashed var(--line);border-radius:var(--radius);color:var(--sub);text-align:center;background:var(--empty-bg);}
-    .table-wrap{overflow:auto;border:1px solid var(--line);border-radius:var(--radius);}
-    table{width:100%;border-collapse:collapse;min-width:820px;background:var(--card);}
-    thead th{position:sticky;top:0;background:var(--table-head);color:var(--text);font-size:13px;text-align:left;padding:13px 12px;border-bottom:1px solid var(--line);white-space:nowrap;}
-    tbody td{padding:13px 12px;border-bottom:1px solid var(--line);font-size:14px;vertical-align:middle;}
+    .table-wrap{overflow-x:hidden;border:1px solid var(--line);border-radius:var(--radius);}
+    table{width:100%;border-collapse:collapse;table-layout:fixed;background:var(--card);}
+    th:nth-child(1),td:nth-child(1){width:23%;}
+    th:nth-child(2),td:nth-child(2){width:14%;}
+    th:nth-child(3),td:nth-child(3){width:14%;}
+    th:nth-child(4),td:nth-child(4){width:12%;}
+    th:nth-child(5),td:nth-child(5){width:23%;}
+    th:nth-child(6),td:nth-child(6){width:14%;}
+    thead th{
+      position:sticky;top:0;background:var(--table-head);color:var(--text);
+      font-size:13px;text-align:center;padding:12px 8px;border-bottom:1px solid var(--line);
+      white-space:normal;line-height:1.35;word-break:keep-all;
+    }
+    tbody td{
+      padding:9px 7px;border-bottom:1px solid var(--line);font-size:13px;vertical-align:middle;
+      text-align:center;line-height:1.45;word-break:keep-all;
+    }
     tbody tr:hover{background:var(--rank-bg);}
-    .pill{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:900;font-size:12px;}
+    .pill{display:inline-block;padding:5px 9px;border-radius:999px;font-weight:900;font-size:12px;white-space:nowrap;}
     .pill-sys{background:#fef2f2;color:#991b1b;}
     .pill-dia{background:#eff6ff;color:#1d4ed8;}
     .pill-bpm{background:#f0fdfa;color:#0f766e;}
     [data-theme="dark"] .pill-sys{background:#2d0a0a;color:#fb7185;}
     [data-theme="dark"] .pill-dia{background:#172f4d;color:#93c5fd;}
     [data-theme="dark"] .pill-bpm{background:#0f302b;color:#5eead4;}
-    .pill-grade{display:inline-block;padding:5px 10px;border-radius:999px;font-weight:900;font-size:12px;}
-    .btn-edit{padding:8px 11px;border-radius:var(--radius);background:#eff6ff;color:#1d4ed8;font-size:13px;font-weight:900;border:none;cursor:pointer;}
+    .pill-grade{display:inline-block;padding:5px 9px;border-radius:999px;font-weight:900;font-size:12px;white-space:normal;}
+    .record-actions{display:flex;justify-content:center;align-items:center;gap:5px;flex-wrap:nowrap;white-space:nowrap;}
+    .btn-edit{padding:7px 8px;border-radius:var(--radius);background:#eff6ff;color:#1d4ed8;font-size:12px;font-weight:900;border:none;cursor:pointer;white-space:nowrap;}
     [data-theme="dark"] .btn-edit{background:#172f4d;color:#93c5fd;}
-    .btn-delete{padding:8px 11px;border-radius:var(--radius);background:#fef2f2;color:#991b1b;font-size:13px;font-weight:900;border:none;cursor:pointer;margin-left:6px;}
+    .btn-delete{padding:7px 8px;border-radius:var(--radius);background:#fef2f2;color:#991b1b;font-size:12px;font-weight:900;border:none;cursor:pointer;white-space:nowrap;}
     [data-theme="dark"] .btn-delete{background:#2d0a0a;color:#f87171;}
     .empty{padding:28px;text-align:center;color:var(--sub);}
     #toast{
@@ -520,6 +534,17 @@
     const d = new Date(value);
     if(isNaN(d)) return value;
     return new Intl.DateTimeFormat("ko-KR",{year:"numeric",month:"2-digit",day:"2-digit",hour:"2-digit",minute:"2-digit"}).format(d);
+  }
+
+  function formatTableDT(value){
+    const d = new Date(value);
+    if(isNaN(d)) return value;
+    const Y = d.getFullYear();
+    const M = String(d.getMonth()+1).padStart(2,'0');
+    const D = String(d.getDate()).padStart(2,'0');
+    const h = String(d.getHours()).padStart(2,'0');
+    const m = String(d.getMinutes()).padStart(2,'0');
+    return `${Y}.${M}.${D} ${h}:${m}`;
   }
 
   let toastTimer = null;
@@ -864,14 +889,16 @@
       const col = dark ? g.pillColorDark : g.pillColor;
       const tr  = document.createElement("tr");
       tr.innerHTML = `
-        <td>${formatDT(r.recordedAt)}</td>
+        <td>${formatTableDT(r.recordedAt)}</td>
         <td><span class="pill pill-sys">${r.systolic} mmHg</span></td>
         <td><span class="pill pill-dia">${r.diastolic} mmHg</span></td>
         <td><span class="pill pill-bpm">${r.pulse} bpm</span></td>
         <td><span class="pill-grade" style="background:${bg};color:${col};padding:5px 10px;border-radius:999px;font-weight:800;font-size:12px;">${g.icon} ${g.name}</span></td>
         <td>
-          <button class="btn-edit"   data-id="${r.id}">수정</button>
-          <button class="btn-delete" data-id="${r.id}">삭제</button>
+          <div class="record-actions">
+            <button class="btn-edit"   data-id="${r.id}">수정</button>
+            <button class="btn-delete" data-id="${r.id}">삭제</button>
+          </div>
         </td>`;
       tbody.appendChild(tr);
     });
